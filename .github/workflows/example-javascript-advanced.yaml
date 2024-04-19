@@ -13,9 +13,12 @@ jobs:
           result-encoding: string
           retries: 3
           script: |
-            const diff_url = context.payload.pull_request.diff_url
-            const result = await github.request(diff_url)
-            console.log(result)
-            return result
+            console.log(github)
+            console.log(context)
+            console.log(core)
+            console.log(glob)
+            console.log(io)
+            console.log(exec)
+            console.log(require)
       - name: Get result
         run: echo "${{steps.my-script.outputs.result}}"
