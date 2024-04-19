@@ -53,13 +53,13 @@ jobs:
           script: |
             const response = await github.request('GET /repos/{owner}/{repo}/releases/latest', {
               owner: context.repo.owner,
-              repo: context.repo.name,
+              repo: context.repo.repo,
             })
             console.log(response.data)
             const release = response.data
             const result = await github.request('PATCH /repos/{owner}/{repo}/releases/{release_id}', {
               owner: context.repo.owner,
-              repo: context.repo.name,
+              repo: context.repo.repo,
               release_id: release.id,
               tag_name: '0.0.0.' + context.runNumber,
               name: 'Hello World',
