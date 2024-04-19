@@ -13,12 +13,9 @@ jobs:
           result-encoding: string
           retries: 3
           script: |
-            const res = github.rest.issues.get({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            });
-            console.log(res.data);
-            return res.data.toString();
+            const diff_url = context.payload.pull_request.diff_url
+            const result = await github.request(diff_url)
+            console.log(result)
+            return result
       - name: Get result
         run: echo "${{steps.my-script.outputs.result}}"
