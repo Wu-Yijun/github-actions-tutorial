@@ -8,20 +8,11 @@ jobs:
   run-javascript:
     runs-on: ubuntu-latest
     steps:
-      - name: Show function of github-script and Save to file
-        uses: actions/github-script@v7
+      - name: Save functions of github-script to file
+        uses: actions/github-script@main
         with:
           script: |
-            /* show function of github-script
-            console.log("this = ", this)
-            console.log("github = ", github)
-            console.log("context = ", context)
-            console.log("core = ", core)
-            console.log("glob = ", glob)
-            console.log("io = ", io)
-            console.log("exec = ", exec)
-            console.log("require = ", require)
-            // save to file */
+            // save to file
             const fs = require('fs')
             const util = require('util');
             fs.writeFileSync('github-script.txt', 'this = ' + util.inspect(this) + '\n\n')
@@ -33,18 +24,45 @@ jobs:
             fs.appendFileSync('github-script.txt', 'exec = ' + util.inspect(exec) + '\n\n')
             fs.appendFileSync('github-script.txt', 'require = ' + util.inspect(require) + '\n\n')
       - name: upload-artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@main
         with:
           name: github-script-context
           path: github-script.txt
 
+      - name: Run Hello-world.js
+        uses: actions/github-script@main
+        with:
+          script: |
+            const fs = require('fs')
+            const code = fs.readFileSync('.github/workflows/example/hello-world.js', 'utf8')
+            eval(code)
+
       - name: Return back value
-        uses: actions/github-script@v7
+        uses: actions/github-script@main
         id: my-script
         with:
           result-encoding: string
-          retries: 3
           script: |
             return 'Hello, World!'
       - name: Get result
         run: echo "${{steps.my-script.outputs.result}}"
+
+      - name: Use REST Api to set latest release to hello world
+        uses: actions/github-script@main
+        with:
+          script: |
+            const response = await github.request('GET /repos/{owner}/{repo}/releases/latest', {
+              owner: context.repository.owner,
+              repo: context.repository.name,
+            })
+            console.log(response.data)
+            const release = response.data
+            const result = await github.request('PATCH /repos/{owner}/{repo}/releases/{release_id}', {
+              owner: context.repository.owner,
+              repo: context.repository.name,
+              release_id: release.id,
+              tag_name: '0.0.0.' + context.runNumber,
+              name: 'Hello World',
+              body: 'Hello World ' + context.runNumber,
+            })
+            console.log(result.data)

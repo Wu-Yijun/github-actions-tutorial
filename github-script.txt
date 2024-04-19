@@ -1,0 +1,327 @@
+this = <ref *1> Object [global] {
+  global: [Circular *1],
+  clearImmediate: [Function: clearImmediate],
+  setImmediate: [Function: setImmediate] {
+    [Symbol(nodejs.util.promisify.custom)]: [Getter]
+  },
+  clearInterval: [Function: clearInterval],
+  clearTimeout: [Function: clearTimeout],
+  setInterval: [Function: setInterval],
+  setTimeout: [Function: setTimeout] {
+    [Symbol(nodejs.util.promisify.custom)]: [Getter]
+  },
+  queueMicrotask: [Function: queueMicrotask],
+  structuredClone: [Function: structuredClone],
+  atob: [Getter/Setter],
+  btoa: [Getter/Setter],
+  performance: [Getter/Setter],
+  fetch: [AsyncFunction: fetch],
+  crypto: [Getter]
+}
+
+github = <ref *1> NewOctokit {
+  request: [Function: newApi] {
+    endpoint: [Function: bound endpointWithDefaults] {
+      DEFAULTS: [Object],
+      defaults: [Function: bound withDefaults],
+      merge: [Function: bound merge],
+      parse: [Function: parse]
+    },
+    defaults: [Function: bound withDefaults]
+  },
+  graphql: [Function: newApi] {
+    defaults: [Function: bound withDefaults],
+    endpoint: [Function: bound endpointWithDefaults] {
+      DEFAULTS: [Object],
+      defaults: [Function: bound withDefaults],
+      merge: [Function: bound merge],
+      parse: [Function: parse]
+    }
+  },
+  log: {
+    debug: [Function: debug],
+    info: [Function: info],
+    warn: [Function: bound warn],
+    error: [Function: bound error]
+  },
+  hook: [Function: bound register] {
+    api: {
+      remove: [Function: bound removeHook],
+      before: [Function: bound addHook],
+      error: [Function: bound addHook],
+      after: [Function: bound addHook],
+      wrap: [Function: bound addHook]
+    },
+    remove: [Function: bound removeHook],
+    before: [Function: bound addHook],
+    error: [Function: bound addHook],
+    after: [Function: bound addHook],
+    wrap: [Function: bound addHook]
+  },
+  auth: [Function: bound auth] AsyncFunction {
+    hook: [Function: bound hook] AsyncFunction
+  },
+  rest: {
+    actions: { octokit: [Circular *1], scope: 'actions', cache: {} },
+    activity: { octokit: [Circular *1], scope: 'activity', cache: {} },
+    apps: { octokit: [Circular *1], scope: 'apps', cache: {} },
+    billing: { octokit: [Circular *1], scope: 'billing', cache: {} },
+    checks: { octokit: [Circular *1], scope: 'checks', cache: {} },
+    codeScanning: { octokit: [Circular *1], scope: 'codeScanning', cache: {} },
+    codesOfConduct: { octokit: [Circular *1], scope: 'codesOfConduct', cache: {} },
+    codespaces: { octokit: [Circular *1], scope: 'codespaces', cache: {} },
+    copilot: { octokit: [Circular *1], scope: 'copilot', cache: {} },
+    dependabot: { octokit: [Circular *1], scope: 'dependabot', cache: {} },
+    dependencyGraph: { octokit: [Circular *1], scope: 'dependencyGraph', cache: {} },
+    emojis: { octokit: [Circular *1], scope: 'emojis', cache: {} },
+    gists: { octokit: [Circular *1], scope: 'gists', cache: {} },
+    git: { octokit: [Circular *1], scope: 'git', cache: {} },
+    gitignore: { octokit: [Circular *1], scope: 'gitignore', cache: {} },
+    interactions: { octokit: [Circular *1], scope: 'interactions', cache: {} },
+    issues: { octokit: [Circular *1], scope: 'issues', cache: {} },
+    licenses: { octokit: [Circular *1], scope: 'licenses', cache: {} },
+    markdown: { octokit: [Circular *1], scope: 'markdown', cache: {} },
+    meta: { octokit: [Circular *1], scope: 'meta', cache: {} },
+    migrations: { octokit: [Circular *1], scope: 'migrations', cache: {} },
+    orgs: { octokit: [Circular *1], scope: 'orgs', cache: {} },
+    packages: { octokit: [Circular *1], scope: 'packages', cache: {} },
+    projects: { octokit: [Circular *1], scope: 'projects', cache: {} },
+    pulls: { octokit: [Circular *1], scope: 'pulls', cache: {} },
+    rateLimit: { octokit: [Circular *1], scope: 'rateLimit', cache: {} },
+    reactions: { octokit: [Circular *1], scope: 'reactions', cache: {} },
+    repos: { octokit: [Circular *1], scope: 'repos', cache: {} },
+    search: { octokit: [Circular *1], scope: 'search', cache: {} },
+    secretScanning: { octokit: [Circular *1], scope: 'secretScanning', cache: {} },
+    securityAdvisories: { octokit: [Circular *1], scope: 'securityAdvisories', cache: {} },
+    teams: { octokit: [Circular *1], scope: 'teams', cache: {} },
+    users: { octokit: [Circular *1], scope: 'users', cache: {} }
+  },
+  paginate: [Function: bound paginate] { iterator: [Function: bound iterator] },
+  retry: { retryRequest: [Function: retryRequest] }
+}
+
+context = Context {
+  payload: {
+    after: '34ca525cf7ee7d78bae16e288fb4fa041535f5e1',
+    base_ref: null,
+    before: 'ca6f3ba54f220e564181721cb1d8372260075094',
+    commits: [ [Object] ],
+    compare: 'https://github.com/Wu-Yijun/github-actions-tutorial/compare/ca6f3ba54f22...34ca525cf7ee',
+    created: false,
+    deleted: false,
+    forced: false,
+    head_commit: {
+      author: [Object],
+      committer: [Object],
+      distinct: true,
+      id: '34ca525cf7ee7d78bae16e288fb4fa041535f5e1',
+      message: 'upload',
+      timestamp: '2024-04-19T10:37:33-07:00',
+      tree_id: 'a174c47fc649529efd3ee0332b5f8db797de84a2',
+      url: 'https://github.com/Wu-Yijun/github-actions-tutorial/commit/34ca525cf7ee7d78bae16e288fb4fa041535f5e1'
+    },
+    pusher: {
+      email: '126391865+Wu-Yijun@users.noreply.github.com',
+      name: 'Wu-Yijun'
+    },
+    ref: 'refs/heads/master',
+    repository: {
+      allow_forking: true,
+      archive_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/{archive_format}{/ref}',
+      archived: false,
+      assignees_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/assignees{/user}',
+      blobs_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/git/blobs{/sha}',
+      branches_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/branches{/branch}',
+      clone_url: 'https://github.com/Wu-Yijun/github-actions-tutorial.git',
+      collaborators_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/collaborators{/collaborator}',
+      comments_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/comments{/number}',
+      commits_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/commits{/sha}',
+      compare_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/compare/{base}...{head}',
+      contents_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/contents/{+path}',
+      contributors_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/contributors',
+      created_at: 1713546076,
+      default_branch: 'master',
+      deployments_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/deployments',
+      description: null,
+      disabled: false,
+      downloads_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/downloads',
+      events_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/events',
+      fork: false,
+      forks: 0,
+      forks_count: 0,
+      forks_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/forks',
+      full_name: 'Wu-Yijun/github-actions-tutorial',
+      git_commits_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/git/commits{/sha}',
+      git_refs_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/git/refs{/sha}',
+      git_tags_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/git/tags{/sha}',
+      git_url: 'git://github.com/Wu-Yijun/github-actions-tutorial.git',
+      has_discussions: false,
+      has_downloads: true,
+      has_issues: true,
+      has_pages: false,
+      has_projects: true,
+      has_wiki: true,
+      homepage: null,
+      hooks_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/hooks',
+      html_url: 'https://github.com/Wu-Yijun/github-actions-tutorial',
+      id: 789080367,
+      is_template: false,
+      issue_comment_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/issues/comments{/number}',
+      issue_events_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/issues/events{/number}',
+      issues_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/issues{/number}',
+      keys_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/keys{/key_id}',
+      labels_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/labels{/name}',
+      language: null,
+      languages_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/languages',
+      license: [Object],
+      master_branch: 'master',
+      merges_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/merges',
+      milestones_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/milestones{/number}',
+      mirror_url: null,
+      name: 'github-actions-tutorial',
+      node_id: 'R_kgDOLwhpLw',
+      notifications_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/notifications{?since,all,participating}',
+      open_issues: 0,
+      open_issues_count: 0,
+      owner: [Object],
+      private: false,
+      pulls_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/pulls{/number}',
+      pushed_at: 1713548261,
+      releases_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/releases{/id}',
+      size: 0,
+      ssh_url: 'git@github.com:Wu-Yijun/github-actions-tutorial.git',
+      stargazers: 0,
+      stargazers_count: 0,
+      stargazers_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/stargazers',
+      statuses_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/statuses/{sha}',
+      subscribers_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/subscribers',
+      subscription_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/subscription',
+      svn_url: 'https://github.com/Wu-Yijun/github-actions-tutorial',
+      tags_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/tags',
+      teams_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/teams',
+      topics: [],
+      trees_url: 'https://api.github.com/repos/Wu-Yijun/github-actions-tutorial/git/trees{/sha}',
+      updated_at: '2024-04-19T17:34:29Z',
+      url: 'https://github.com/Wu-Yijun/github-actions-tutorial',
+      visibility: 'public',
+      watchers: 0,
+      watchers_count: 0,
+      web_commit_signoff_required: false
+    },
+    sender: {
+      avatar_url: 'https://avatars.githubusercontent.com/u/126391865?v=4',
+      events_url: 'https://api.github.com/users/Wu-Yijun/events{/privacy}',
+      followers_url: 'https://api.github.com/users/Wu-Yijun/followers',
+      following_url: 'https://api.github.com/users/Wu-Yijun/following{/other_user}',
+      gists_url: 'https://api.github.com/users/Wu-Yijun/gists{/gist_id}',
+      gravatar_id: '',
+      html_url: 'https://github.com/Wu-Yijun',
+      id: 126391865,
+      login: 'Wu-Yijun',
+      node_id: 'U_kgDOB4iWOQ',
+      organizations_url: 'https://api.github.com/users/Wu-Yijun/orgs',
+      received_events_url: 'https://api.github.com/users/Wu-Yijun/received_events',
+      repos_url: 'https://api.github.com/users/Wu-Yijun/repos',
+      site_admin: false,
+      starred_url: 'https://api.github.com/users/Wu-Yijun/starred{/owner}{/repo}',
+      subscriptions_url: 'https://api.github.com/users/Wu-Yijun/subscriptions',
+      type: 'User',
+      url: 'https://api.github.com/users/Wu-Yijun'
+    }
+  },
+  eventName: 'push',
+  sha: '34ca525cf7ee7d78bae16e288fb4fa041535f5e1',
+  ref: 'refs/heads/master',
+  workflow: 'Example - Run Javascript Advanced',
+  action: '__actions_github-script',
+  actor: 'Wu-Yijun',
+  job: 'run-javascript',
+  runNumber: 7,
+  runId: 8757492859,
+  apiUrl: 'https://api.github.com',
+  serverUrl: 'https://github.com',
+  graphqlUrl: 'https://api.github.com/graphql'
+}
+
+core = {
+  ExitCode: { '0': 'Success', '1': 'Failure', Success: 0, Failure: 1 },
+  exportVariable: [Function: exportVariable],
+  setSecret: [Function: setSecret],
+  addPath: [Function: addPath],
+  getInput: [Function: getInput],
+  getMultilineInput: [Function: getMultilineInput],
+  getBooleanInput: [Function: getBooleanInput],
+  setOutput: [Function: setOutput],
+  setCommandEcho: [Function: setCommandEcho],
+  setFailed: [Function: setFailed],
+  isDebug: [Function: isDebug],
+  debug: [Function: debug],
+  error: [Function: error],
+  warning: [Function: warning],
+  notice: [Function: notice],
+  info: [Function: info],
+  startGroup: [Function: startGroup],
+  endGroup: [Function: endGroup],
+  group: [Function: group],
+  saveState: [Function: saveState],
+  getState: [Function: getState],
+  getIDToken: [Function: getIDToken],
+  summary: [Getter],
+  markdownSummary: [Getter],
+  toPosixPath: [Getter],
+  toWin32Path: [Getter],
+  toPlatformPath: [Getter]
+}
+
+glob = { create: [Function: create], hashFiles: [Function: hashFiles] }
+
+io = {
+  cp: [Function: cp],
+  mv: [Function: mv],
+  rmRF: [Function: rmRF],
+  mkdirP: [Function: mkdirP],
+  which: [Function: which],
+  findInPath: [Function: findInPath]
+}
+
+exec = { exec: [Function: exec], getExecOutput: [Function: getExecOutput] }
+
+require = [Function: require] {
+  resolve: [Function: resolve] { paths: [Function: paths] },
+  main: {
+    id: '.',
+    path: '/home/runner/work/_actions/actions/github-script/v7/dist',
+    exports: {},
+    filename: '/home/runner/work/_actions/actions/github-script/v7/dist/index.js',
+    loaded: false,
+    children: [],
+    paths: [
+      '/home/runner/work/_actions/actions/github-script/v7/dist/node_modules',
+      '/home/runner/work/_actions/actions/github-script/v7/node_modules',
+      '/home/runner/work/_actions/actions/github-script/node_modules',
+      '/home/runner/work/_actions/actions/node_modules',
+      '/home/runner/work/_actions/node_modules',
+      '/home/runner/work/node_modules',
+      '/home/runner/node_modules',
+      '/home/node_modules',
+      '/node_modules'
+    ]
+  },
+  extensions: [Object: null prototype] {
+    '.js': [Function (anonymous)],
+    '.json': [Function (anonymous)],
+    '.node': [Function (anonymous)]
+  },
+  cache: [Object: null prototype] {
+    '/home/runner/work/_actions/actions/github-script/v7/dist/index.js': {
+      id: '.',
+      path: '/home/runner/work/_actions/actions/github-script/v7/dist',
+      exports: {},
+      filename: '/home/runner/work/_actions/actions/github-script/v7/dist/index.js',
+      loaded: false,
+      children: [],
+      paths: [Array]
+    }
+  }
+}
+
