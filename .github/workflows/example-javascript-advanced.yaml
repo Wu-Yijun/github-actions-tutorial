@@ -13,13 +13,6 @@ jobs:
         with:
           script: |
             console.log(this)
-            console.log(github)
-            console.log(context)
-            console.log(core)
-            console.log(glob)
-            console.log(io)
-            console.log(exec)
-            console.log(require)
 
       - name: Return back value
         uses: actions/github-script@v7
