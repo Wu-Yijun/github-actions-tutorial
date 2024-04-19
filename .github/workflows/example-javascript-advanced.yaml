@@ -61,8 +61,8 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: release.id,
-              tag_name: '0.0.0.' + context.runNumber,
-              name: 'Hello World',
+              tag_name: '0.0.0.0',
+              name: 'Hello World Release',
               body: 'Hello World ' + context.runNumber,
             })
             console.log(result.data)
