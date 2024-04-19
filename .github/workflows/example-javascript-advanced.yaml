@@ -7,6 +7,8 @@ on:
 jobs:
   run-javascript:
     runs-on: ubuntu-latest
+    outputs:
+      greeting:
     steps:
       - name: Save functions of github-script to file
         uses: actions/github-script@main
@@ -81,8 +83,23 @@ jobs:
             const hello = process.env.HELLO
             const comma = process.env.COMMA
             core.exportVariable('WORLD', hello + comma + 'world!')
-            core.setOutput('greeting', hello + 'world!')
+            core.setOutput('greeting', hello + ' world!')
       - name: print output
         run: |
           echo $WORLD
           echo ${{ steps.get-and-set-env.outputs.greeting }}
+    
+  check-outputs:
+    runs-on: ubuntu-latest
+    needs: run-javascript
+    steps:
+      - name: Check outputs
+        run: |
+          echo "WORLD = $WORLD"
+          echo "greeting = ${{ needs.run-javascript.outputs.greeting }}"
+      # - name: Download artifact
+      #   uses: actions/download-artifact@main
+      #   with:
+      #     name: github-script-context
+      # - name: Check artifact
+      #   run: cat github-script.txt
