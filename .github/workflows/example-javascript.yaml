@@ -1,0 +1,29 @@
+name: Example - Run Javascript
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-javascript:
+    runs-on: ubuntu-latest
+    steps:
+      # 获取代码(这样可以运行储存库中你写的代码)
+      - uses: actions/checkout@v4
+      # 安装 Node
+      # 其实这一步可以略去, 没什么影响
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+      # 运行 JS 代码
+      - name: Run JavaScript
+        id: Run-JavaScript
+        run: node ./.github/workflows/example/javascript.js arg1_value arg2_value
+        env:
+          Env1: value1
+          Env2: value2
+      # 打印输出
+      - name: Echo output of js
+        run: |
+          echo ${{ steps.Run-JavaScript.outputs.output1 }}
+          echo ${{ steps.Run-JavaScript.outputs.output2 }}
