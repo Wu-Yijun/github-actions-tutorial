@@ -70,7 +70,8 @@ jobs:
       - name: Get result
         run: echo "${{steps.my-script.outputs.result}}"
 
-      - run: HELLO="hello, "
+      - name: set input
+        run: HELLO="hello, "
       - name: get and set env
         uses: actions/github-script@main
         with:
@@ -78,7 +79,11 @@ jobs:
             const hello = process.env.HELLO
             console.log(hello)
             core.exportVariable('WORLD', hello + 'world!')
-      - run: echo $WORLD
+            core.setOutput('res', hello + 'world!')
+      - name: print output
+        run: |
+          echo $WORLD
+          echo ${{ steps.get-and-set-env.outputs.res }}
 
       - run: echo 'greeting = "Hello, World!"' > $GITHUB_ENV
       - name: get env
