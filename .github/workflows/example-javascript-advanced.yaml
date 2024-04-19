@@ -29,13 +29,13 @@ jobs:
           name: github-script-context
           path: github-script.txt
 
-      - name: Run Hello-world.js
-        uses: actions/github-script@main
-        with:
-          script: |
-            const fs = require('fs')
-            const code = fs.readFileSync('.github/workflows/example/hello-world.js', 'utf8')
-            eval(code)
+      # - name: Run Hello-world.js
+      #   uses: actions/github-script@main
+      #   with:
+      #     script: |
+      #       const fs = require('fs')
+      #       const code = fs.readFileSync('.github/workflows/example/hello-world.js', 'utf8')
+      #       eval(code)
 
       - name: Return back value
         uses: actions/github-script@main
