@@ -8,11 +8,34 @@ jobs:
   run-javascript:
     runs-on: ubuntu-latest
     steps:
-      - name: Show function of github-script
+      - name: Show function of github-script and Save to file
         uses: actions/github-script@v7
         with:
           script: |
-            console.log(this)
+            /* show function of github-script
+            console.log("this = ", this)
+            console.log("github = ", github)
+            console.log("context = ", context)
+            console.log("core = ", core)
+            console.log("glob = ", glob)
+            console.log("io = ", io)
+            console.log("exec = ", exec)
+            console.log("require = ", require)
+            // save to file */
+            const fs = require('fs')
+            fs.writeFileSync('github-script.txt', 'this = ' + JSON.stringify(this) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'github = ' + JSON.stringify(github) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'context = ' + JSON.stringify(context) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'core = ' + JSON.stringify(core) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'glob = ' + JSON.stringify(glob) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'io = ' + JSON.stringify(io) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'exec = ' + JSON.stringify(exec) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'require = ' + JSON.stringify(require) + '\n\n')
+      - name: upload-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: github-script-context
+          path: github-script.txt
 
       - name: Return back value
         uses: actions/github-script@v7
