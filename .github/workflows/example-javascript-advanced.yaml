@@ -1,0 +1,24 @@
+name: Example - Run Javascript Advanced
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-javascript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        id: my-script
+        with:
+          result-encoding: string
+          retries: 3
+          script: |
+            const res = github.rest.issues.get({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            console.log(res.data);
+            return res.data.toString();
+      - name: Get result
+        run: echo "${{steps.my-script.outputs.result}}"
