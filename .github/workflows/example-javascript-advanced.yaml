@@ -50,6 +50,7 @@ jobs:
       - name: Use REST Api to set latest release to hello world
         uses: actions/github-script@main
         with:
+
           script: |
             const response = await github.request('GET /repos/{owner}/{repo}/releases/latest', {
               owner: context.repo.owner,
@@ -61,7 +62,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: release.id,
-              tag_name: 'v0.0.0.0',
+              tag_name: 'v0.0.0.1',
               name: 'Hello World Release',
               body: 'Hello World ' + context.runNumber,
             })

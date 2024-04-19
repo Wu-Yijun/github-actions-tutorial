@@ -564,3 +564,6 @@ fs.writeFileSync(process.env.GITHUB_OUTPUT, 'output2=' + env2 + arg2);
 
 
 我先写到这, 哪天有时间再写.
+
+![permission](image-14.png)
+![write-permission](image-15.png)
