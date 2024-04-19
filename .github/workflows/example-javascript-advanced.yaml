@@ -71,25 +71,18 @@ jobs:
         run: echo "${{steps.my-script.outputs.result}}"
 
       - name: set input
-        run: HELLO="hello, "
+        run: echo 'hello = "Hello"' > $GITHUB_ENV
       - name: get and set env
         uses: actions/github-script@main
+        env:
+          COMMA: ', '
         with:
           script: |
             const hello = process.env.HELLO
-            console.log(hello)
-            core.exportVariable('WORLD', hello + 'world!')
-            core.setOutput('res', hello + 'world!')
+            const comma = process.env.COMMA
+            core.exportVariable('WORLD', hello + comma + 'world!')
+            core.setOutput('greeting', hello + 'world!')
       - name: print output
         run: |
           echo $WORLD
-          echo ${{ steps.get-and-set-env.outputs.res }}
-
-      - run: echo 'greeting = "Hello, World!"' > $GITHUB_ENV
-      - name: get env
-        uses: actions/github-script@main
-        with:
-          script: |
-            const greeting = process.env.greeting
-            console.log(greeting)
-            
+          echo ${{ steps.get-and-set-env.outputs.greeting }}
