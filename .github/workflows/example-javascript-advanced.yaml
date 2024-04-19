@@ -23,14 +23,15 @@ jobs:
             console.log("require = ", require)
             // save to file */
             const fs = require('fs')
-            fs.writeFileSync('github-script.txt', 'this = ' + JSON.stringify(this) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'github = ' + JSON.stringify(github) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'context = ' + JSON.stringify(context) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'core = ' + JSON.stringify(core) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'glob = ' + JSON.stringify(glob) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'io = ' + JSON.stringify(io) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'exec = ' + JSON.stringify(exec) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'require = ' + JSON.stringify(require) + '\n\n')
+            const util = require('util');
+            fs.writeFileSync('github-script.txt', 'this = ' + util.inspect(this) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'github = ' + util.inspect(github) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'context = ' + util.inspect(context) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'core = ' + util.inspect(core) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'glob = ' + util.inspect(glob) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'io = ' + util.inspect(io) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'exec = ' + util.inspect(exec) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'require = ' + util.inspect(require) + '\n\n')
       - name: upload-artifact
         uses: actions/upload-artifact@v2
         with:
