@@ -25,6 +25,9 @@ jobs:
             fs.appendFileSync('github-script.txt', 'io = ' + util.inspect(io) + '\n\n')
             fs.appendFileSync('github-script.txt', 'exec = ' + util.inspect(exec) + '\n\n')
             fs.appendFileSync('github-script.txt', 'require = ' + util.inspect(require) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'toolkit = ' + util.inspect(toolkit) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'state = ' + util.inspect(state) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'process = ' + util.inspect(process) + '\n\n')
       - name: upload-artifact
         uses: actions/upload-artifact@main
         with:
@@ -88,6 +91,16 @@ jobs:
         run: |
           echo $WORLD
           echo ${{ steps.get-and-set-env.outputs.greeting }}
+        
+      # - name: run outer script
+      #   uses: actions/github-script@main
+      #   with:
+      #     script: |
+      #       const script2 = require('./path/to/script.js')
+      #       script({github, context, core})
+      #       const script = require('./path/to/script.js')
+      #       await script({github, context, core})
+
     
   check-outputs:
     runs-on: ubuntu-latest
