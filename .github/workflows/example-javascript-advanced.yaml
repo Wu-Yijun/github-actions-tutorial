@@ -94,6 +94,7 @@ jobs:
             fs.appendFileSync('github-script.txt', 'exec = ' + util.inspect(exec) + '\n\n')
             fs.appendFileSync('github-script.txt', 'require = ' + util.inspect(require) + '\n\n')
             fs.appendFileSync('github-script.txt', 'process = ' + util.inspect(process) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'steps = ' + util.inspect(steps) + '\n\n')
       - name: upload-artifact
         uses: actions/upload-artifact@main
         with:

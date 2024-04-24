@@ -562,9 +562,13 @@ fs.writeFileSync(process.env.GITHUB_OUTPUT, 'output2=' + env2 + arg2);
 
 它有一些更高级的功能.
 
+#### 库内读写权限
 
-我先写到这, 哪天有时间再写.
-
+不过在使用一些功能前, 我们需要更改GitHub actions 的权限
+如下所示
 ![permission](image-14.png)
 ![write-permission](image-15.png)
 
+#### 概述
+
+这个库有优点也有缺点, 优点就是它先天的提供了一些可用函数, 方法, 
