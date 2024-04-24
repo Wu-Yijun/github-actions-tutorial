@@ -1,1 +1,3 @@
-console.log('Hello World!');
+module.exports = ({github, context, core}) => {
+  console.log('Hello, World!')
+}

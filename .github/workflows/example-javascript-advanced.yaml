@@ -7,8 +7,6 @@ on:
 jobs:
   run-javascript:
     runs-on: ubuntu-latest
-    outputs:
-      greeting:
     steps:
 
       - name: Check out code
@@ -55,28 +53,31 @@ jobs:
       - name: set input
         run: echo 'hello = "Hello"' > $GITHUB_ENV
       - name: get and set env
+        id: get-and-set-env
         uses: actions/github-script@main
         env:
           COMMA: ', '
         with:
           script: |
-            const hello = process.env.HELLO
+            const hello = process.env.hello 
             const comma = process.env.COMMA
             core.exportVariable('WORLD', hello + comma + 'world!')
-            core.setOutput('greeting', hello + ' world!')
+            return { greeting: hello + comma + 'world!', array: [1, 2, 3]}
+          result-encoding: json
       - name: print output
         run: |
           echo $WORLD
-          echo ${{ steps.get-and-set-env.outputs.greeting }}
+          echo "${{ steps.get-and-set-env.outputs.result.greeting }}"
+          echo "${{ steps.get-and-set-env.outputs.result.array }}"
         
-      # - name: run outer script
-      #   uses: actions/github-script@main
-      #   with:
-      #     script: |
-      #       const script2 = require('./path/to/script.js')
-      #       script({github, context, core})
-      #       const script = require('./path/to/script.js')
-      #       await script({github, context, core})
+      - name: run outer script
+        uses: actions/github-script@main
+        with:
+          script: |
+            const script = require('.github/workflows/example/hello-world.js')
+            script({github, context, core})
+            const script_async = require('.github/workflows/example/hello-world-async.js')
+            await script({github, context, core})
       
       - name: Save functions of github-script to file
         uses: actions/github-script@main
@@ -98,19 +99,3 @@ jobs:
         with:
           name: github-script-context
           path: github-script.txt
-
-    
-  check-outputs:
-    runs-on: ubuntu-latest
-    needs: run-javascript
-    steps:
-      - name: Check outputs
-        run: |
-          echo "WORLD = $WORLD"
-          echo "greeting = ${{ needs.run-javascript.outputs.greeting }}"
-      # - name: Download artifact
-      #   uses: actions/download-artifact@main
-      #   with:
-      #     name: github-script-context
-      # - name: Check artifact
-      #   run: cat github-script.txt
