@@ -571,4 +571,4 @@ fs.writeFileSync(process.env.GITHUB_OUTPUT, 'output2=' + env2 + arg2);
 
 #### 概述
 
-这个库有优点也有缺点, 优点就是它先天的提供了一些可用函数, 方法, 
+这个库有优点也有缺点, 优点就是它先天的提供了一些可用函数, 方法, 变量

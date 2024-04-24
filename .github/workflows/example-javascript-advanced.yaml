@@ -1,8 +1,7 @@
 name: Example - Run Javascript Advanced
 
 on:
-  workflow_dispatch:
-  push:
+  [push]
 
 jobs:
   run-javascript:
