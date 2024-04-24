@@ -14,7 +14,9 @@ jobs:
       # input and output
       - name: set input
         id: set-input
-        run: echo 'hello = "Hello"' > $GITHUB_ENV
+        run: |
+          echo 'hello=Hello' > $GITHUB_ENV
+          echo 'world=World' > $GITHUB_OUTPUT
       - name: get and set env
         id: get-and-set-env
         uses: actions/github-script@main
@@ -23,11 +25,11 @@ jobs:
         with:
           script: |
             const hello = process.env.hello
-            const hello2 = "${{ steps.set-input.outputs.hello }}"
+            const world = "${{ steps.set-input.outputs.world }}"
             const comma = process.env.COMMA
-            console.log(hello, hello2, comma)
-            core.exportVariable('WORLD', hello + comma + 'world!')
-            return { greeting: hello2 + comma + 'world!', array: [1, 2, 3]}
+            console.log(hello, world, comma)
+            core.exportVariable('WORLD', hello + comma + world + '!')
+            return { greeting: hello + comma + 'world!', array: [1, 2, 3]}
           result-encoding: json
       - name: print output
         run: |
@@ -40,8 +42,7 @@ jobs:
         uses: actions/github-script@main
         with:
           script: |
-
-            console.log('run script from file');
+            console.log('--run script from file');
             const fs = require('fs')
             console.log(fs);
             const script = fs.readFileSync('.github/workflows/example/hello-world.js')
@@ -49,13 +50,10 @@ jobs:
             const text = "Eval script"
             console.log(text);
             eval(script)
-            console.log('Done');
-
-            console.log('run sync script from file');
+            console.log('--run sync script from file');
             const script_sync = require('.github/workflows/example/hello-world.js')
             script_sync({github, context, core, "Synchronous function"})
-
-            console.log('run async script from file');
+            console.log('--run async script from file');
             const script_async = require('.github/workflows/example/hello-world-async.js')
             await script({github, context, core, "Asynchronous function"})
       
