@@ -63,9 +63,13 @@ jobs:
           script: |
             /* run script from file */
             const fs = require('fs')
-            const script = fs.readFileSync('.github/workflows/example/hello-world.js', 'utf8')
+            console.log(fs);
+            const script = fs.readFileSync('.github/workflows/example/hello-world.js')
+            console.log(script);
             const text = "Eval script"
+            console.log(text);
             eval(script)
+            console.log('Done');
             /* run sync script from file */
             const script_sync = require('.github/workflows/example/hello-world.js')
             script_sync({github, context, core, "Synchronous function"})
