@@ -1,23 +1,17 @@
 name: Example - Run Javascript Advanced
 
 on:
-  [push]
+  push:
+  workflow_dispatch:
 
 jobs:
   run-javascript:
     runs-on: ubuntu-latest
     steps:
-
       - name: Check out code
         uses: actions/checkout@main
-      - name: Run Hello-world.js
-        uses: actions/github-script@main
-        with:
-          script: |
-            const fs = require('fs')
-            const code = fs.readFileSync('.github/workflows/example/hello-world.js', 'utf8')
-            eval(code)
 
+      # use REST Api to set latest release to hello world + runNumber
       - name: Use REST Api to set latest release to hello world
         uses: actions/github-script@main
         with:
@@ -39,17 +33,8 @@ jobs:
             console.log(result.data)
           
       # input and output
-      - name: Return back value
-        uses: actions/github-script@main
-        id: my-script
-        with:
-          result-encoding: string
-          script: |
-            return 'Hello, World!'
-      - name: Get result
-        run: echo "${{steps.my-script.outputs.result}}"
-
       - name: set input
+        id: set-input
         run: echo 'hello = "Hello"' > $GITHUB_ENV
       - name: get and set env
         id: get-and-set-env
@@ -58,10 +43,12 @@ jobs:
           COMMA: ', '
         with:
           script: |
-            const hello = process.env.hello 
+            const hello = process.env.hello
+            const hello2 = "${{ steps.set-input.outputs.hello }}"
             const comma = process.env.COMMA
+            console.log(hello, hello2, comma)
             core.exportVariable('WORLD', hello + comma + 'world!')
-            return { greeting: hello + comma + 'world!', array: [1, 2, 3]}
+            return { greeting: hello2 + comma + 'world!', array: [1, 2, 3]}
           result-encoding: json
       - name: print output
         run: |
@@ -69,15 +56,24 @@ jobs:
           echo "${{ steps.get-and-set-env.outputs.result.greeting }}"
           echo "${{ steps.get-and-set-env.outputs.result.array }}"
         
+      # run script from file
       - name: run outer script
         uses: actions/github-script@main
         with:
           script: |
-            const script = require('.github/workflows/example/hello-world.js')
-            script({github, context, core})
+            /* run script from file */
+            const fs = require('fs')
+            const script = fs.readFileSync('.github/workflows/example/hello-world.js', 'utf8')
+            const text = "Eval script"
+            eval(script)
+            /* run sync script from file */
+            const script_sync = require('.github/workflows/example/hello-world.js')
+            script_sync({github, context, core, "Synchronous function"})
+            /* run async script from file */
             const script_async = require('.github/workflows/example/hello-world-async.js')
-            await script({github, context, core})
+            await script({github, context, core, "Asynchronous function"})
       
+      # save context to file
       - name: Save functions of github-script to file
         uses: actions/github-script@main
         with:
