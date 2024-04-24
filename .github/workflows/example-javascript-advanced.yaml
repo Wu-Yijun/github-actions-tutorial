@@ -6,7 +6,8 @@ on:
 
 jobs:
   run-javascript:
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Check out code
         uses: actions/checkout@main
@@ -44,9 +45,7 @@ jobs:
           script: |
             console.log('--run script from file');
             const fs = require('fs')
-            console.log(fs);
             const script = fs.readFileSync('.github/workflows/example/hello-world.js')
-            console.log(script);
             const text = "Eval script"
             console.log(text);
             eval(script)

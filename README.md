@@ -575,5 +575,6 @@ fs.writeFileSync(process.env.GITHUB_OUTPUT, 'output2=' + env2 + arg2);
 
 #### 输入输出
 
-有多种形式提供输入, 一种是设置环境变量, 使用 `process.env.NAME` 调用, 一种是使用 `${{ steps.step-id.outputs.NAME }}` 作为文本直接嵌入, 最后是设置在 input 里
-```
+有多种形式提供输入, 一种是设置环境变量, 使用 `process.env.NAME` 调用, 一种是使用 `${{ steps.step-id.outputs.NAME }}` 作为文本直接嵌入, 最后是设置在 input 里使用 `core.getInput(NAME)` 获取
+
+输出也有许多形式, 最简单的是 return 返回一个值. 我们可以设置 result-encoding 为 sring 或 json
