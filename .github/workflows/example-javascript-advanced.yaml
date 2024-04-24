@@ -52,10 +52,10 @@ jobs:
             eval(script)
             console.log('--run sync script from file');
             const script_sync = require('.github/workflows/example/hello-world.js')
-            script_sync({github, context, core, "Synchronous function"})
+            script_sync({github, context, core, text: "Synchronous function"})
             console.log('--run async script from file');
             const script_async = require('.github/workflows/example/hello-world-async.js')
-            await script({github, context, core, "Asynchronous function"})
+            await script_async({github, context, core, text: "Asynchronous function"})
       
       # save context to file
       - name: Save functions of github-script to file
