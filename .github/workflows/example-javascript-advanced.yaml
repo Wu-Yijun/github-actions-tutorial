@@ -105,6 +105,21 @@ jobs:
         uses: actions/github-script@main
         with:
           script: |
+            // listReleaseAssets
+            const ids = github.rest.repos.listReleaseAssets({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: process.env.RELEASE,
+            });
+            // deleteReleaseAsset
+            for (const id of ids) {
+              github.rest.repos.deleteReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                asset_id: id.id,
+              });
+            }
+            // uploadReleaseAsset
             const fs = require('fs')
             github.rest.repos.uploadReleaseAsset({
               owner: context.repo.owner,
@@ -113,4 +128,4 @@ jobs:
               name: `github-script-context-${context.runNumber}.txt`,
               data: fs.readFileSync('github-script-context.txt'),
             })
-            console.log(github.rest.repos);
+            
