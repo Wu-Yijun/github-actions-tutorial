@@ -681,7 +681,7 @@ fs.writeFileSync(process.env.GITHUB_OUTPUT, 'output2=' + env2 + arg2);
 Octokit 和 REST Api 才是这个库的**核心**所在.
 
 通常情况下, 我们使用 Octokit 是需要先获取授权的 *(Oauth)* , 而这个授权需要使用 token, 很容易出现奇奇怪怪的问题导致授权失败.
-而这个库给出的变量 `github` 是已经预先完成授权的 Octokit, 因此我们可以直接调用 request 来访问 Github Api.
+而这个库给出的变量 `github` 是已经预先完成授权的 Octokit, 因此我们可以直接调用 `github.request()` 来访问 Github Api.
 比如这个示例我们先获取最新的 release, 得到它的 id. 然后再更新这个 release 的正文, 为 Hello World + 运行次数.
 ``` javascript
 const response = await github.request('GET /repos/{owner}/{repo}/releases/latest', {
@@ -699,5 +699,6 @@ const result = await github.request('PATCH /repos/{owner}/{repo}/releases/{relea
 })
 ```
 
+此外, github 还封装了不少可以直接用的操作在 `github.rest` 内, 比如 `github.rest.issues.get`, `github.repos.uploadReleaseAsset` 等等
 
 ## Github REST Api 教程
