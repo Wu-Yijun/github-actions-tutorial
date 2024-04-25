@@ -110,6 +110,6 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: process.env.RELEASE,
-              name: 'github-script-context' + context.runNumber + '.txt',
+              name: `github-script-context-${context.runNumber}.txt`,
               data: fs.readFileSync('github-script-context.txt'),
             })
