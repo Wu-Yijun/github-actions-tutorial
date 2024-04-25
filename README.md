@@ -1,5 +1,7 @@
 # 关于 Github Action 的一份不完全指南
 
+也可以从[我的代码仓库进入(外部链接)](https://github.com/Wu-Yijun/github-actions-tutorial)
+
 ## 镇楼
 
 ![github-action](overview-actions-simple.webp)
@@ -26,10 +28,10 @@
       - [调用Github REST API](#js-中使用-rest-api)
   - Python 脚本
 - 进阶 - 外部 Action 的使用
-  - 上传文件到 workflow: actions/upload-artifact@main [(repo hyperlink)](https://github.com/actions/upload-artifact)
-  - 使用仓库的文件和代码: actions/checkout@main [(repo hyperlink)](https://github.com/actions/checkout)
-  - 创建和发布 release: actions/create-release@main [(repo hyperlink)](https://github.com/actions/create-release), actions/upload-release-asset@main [(repo hyperlink)](https://github.com/actions/upload-release-asset)
-  - [使用 JavaScript 脚本](#更好的执行-js-脚本): actions/github-script@main [(repo hyperlink)](https://github.com/actions/github-script)
+  - 上传文件到 workflow: actions/upload-artifact@main [(外部链接)](https://github.com/actions/upload-artifact)
+  - 使用仓库的文件和代码: actions/checkout@main [(外部链接)](https://github.com/actions/checkout)
+  - 创建和发布 release: actions/create-release@main [(外部链接)](https://github.com/actions/create-release), actions/upload-release-asset@main [(外部链接)](https://github.com/actions/upload-release-asset)
+  - [使用 JavaScript 脚本](#更好的执行-js-脚本): actions/github-script@main [(外部链接)](https://github.com/actions/github-script)
 - 进阶 - [Github REST API](#github-rest-api-教程)
 - 高级 - 更多技巧
   - Matrix 矩阵, 复用代码
@@ -86,7 +88,7 @@ yaml 文件的关键有两个部分触发器和工作流
 
 #### YAML 文件结构格式
 
-参见 [菜鸟教程](https://www.runoob.com/w3cnote/yaml-intro.html)
+参见 [菜鸟教程(外部链接)](https://www.runoob.com/w3cnote/yaml-intro.html)
 
 YAML 的语法和其他高级语言类似，并且可以简单表达清单、散列表，标量等数据形态。它使用空白符号缩进和大量依赖外观的特色，特别适合用来表达或编辑数据结构、各种配置文件、文件大纲.
 
@@ -564,7 +566,7 @@ fs.writeFileSync(process.env.GITHUB_OUTPUT, 'output2=' + env2 + arg2);
 
 ### 更好的执行 js 脚本
 
-我们可以用外部库 [actions/github-script](https://github.com/actions/github-script)
+我们可以用外部库 [actions/github-script(外部链接)](https://github.com/actions/github-script)
 
 它有一些更高级的功能.
 
@@ -680,7 +682,7 @@ await script_async(github, context, core, "Asynchronous function")
 ```
 
 结果:
-github-script-context.txt
+*github-script-context.txt*
 ```js
 this = <ref *1> Object [global] {
   global: [Circular *1],
@@ -777,7 +779,7 @@ const result = await github.request('PATCH /repos/{owner}/{repo}/releases/{relea
 })
 ```
 
-此外, github 还封装了不少可以直接用的操作在 `github.rest` 内, 比如 `github.rest.issues.get`, `github.repos.uploadReleaseAsset` 等等(全部列表可参见 [octokit/rest.js](https://octokit.github.io/rest.js)), 可以简化调用:
+此外, github 还封装了不少可以直接用的操作在 `github.rest` 内, 比如 `github.rest.issues.get`, `github.repos.uploadReleaseAsset` 等等(全部列表可参见 [octokit/rest.js(外部链接)](https://octokit.github.io/rest.js)), 可以简化调用:
 ```js
 github.rest.repos.uploadReleaseAsset({
   owner: context.repo.owner,

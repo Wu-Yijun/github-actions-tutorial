@@ -106,14 +106,14 @@ jobs:
         with:
           script: |
             // listReleaseAssets
-            const ids = github.rest.repos.listReleaseAssets({
+            const ids = await github.rest.repos.listReleaseAssets({
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: process.env.RELEASE,
             });
             console.log(ids)
             // deleteReleaseAsset
-            for (const id of ids.data) {
+            for (const id of ids) {
               github.rest.repos.deleteReleaseAsset({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
