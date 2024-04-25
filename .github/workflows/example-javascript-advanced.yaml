@@ -47,12 +47,11 @@ jobs:
             const fs = require('fs')
             const script = fs.readFileSync('.github/workflows/example/hello-world.js')
             const text = "Eval script"
-            console.log(text);
             Function('text', script)(text);
-            console.log('--- run sync script from file ---');
-            const script_sync = require('.github/workflows/example/hello-world.js')
+            console.log('\n--- run sync script from file ---\n');
+            const script_sync = require('.github/workflows/example/hello-world-sync.js')
             script_sync(github, context, core, "Synchronous function")
-            console.log('--- run async script from file ---');
+            console.log('\n--- run async script from file ---\n');
             const script_async = require('.github/workflows/example/hello-world-async.js')
             await script_async(github, context, core, "Asynchronous function")
       
@@ -63,23 +62,23 @@ jobs:
           script: |
             const fs = require('fs')
             const util = require('util');
-            fs.writeFileSync('github-script.txt', 'this = ' + util.inspect(this) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'github = ' + util.inspect(github) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'context = ' + util.inspect(context) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'core = ' + util.inspect(core) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'glob = ' + util.inspect(glob) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'io = ' + util.inspect(io) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'exec = ' + util.inspect(exec) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'require = ' + util.inspect(require) + '\n\n')
+            fs.writeFileSync('github-script-context.txt', 'this = ' + util.inspect(this) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'github = ' + util.inspect(github) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'context = ' + util.inspect(context) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'core = ' + util.inspect(core) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'glob = ' + util.inspect(glob) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'io = ' + util.inspect(io) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'exec = ' + util.inspect(exec) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'require = ' + util.inspect(require) + '\n\n')
             process.env['INPUT_GITHUB-TOKEN'] = '***'
             process.env['ACTIONS_RUNTIME_TOKEN'] = '***'
-            fs.appendFileSync('github-script.txt', 'process = ' + util.inspect(process) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'steps = ' + util.inspect(steps) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'process = ' + util.inspect(process) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'steps = ' + util.inspect(steps) + '\n\n')
       - name: upload-artifact
         uses: actions/upload-artifact@main
         with:
           name: github-script-context
-          path: github-script.txt
+          path: github-script-context.txt
 
       # use REST Api to set latest release to hello world + runNumber
       - name: Use REST Api to set latest release to hello world
@@ -111,5 +110,5 @@ jobs:
               repo: context.repo.repo,
               release_id: process.env.RELEASE,
               name: 'github-script-context' + context.runNumber + '.txt',
-              data: fs.readFileSync('github-script.txt'),
+              data: fs.readFileSync('github-script-context.txt'),
             })
