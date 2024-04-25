@@ -579,37 +579,39 @@ fs.writeFileSync(process.env.GITHUB_OUTPUT, 'output2=' + env2 + arg2);
 
 有多种形式提供输入, 一种是设置环境变量, 使用 `process.env.NAME` 调用, 一种是使用 `${{ steps.step-id.outputs.NAME }}` 作为文本直接嵌入, 最后是设置在 input 里使用 `core.getInput(NAME)` 获取 yaml 的 input 的输入
 
-输出也有许多形式, 最简单的是 return 返回一个值. 我们可以设置 result-encoding 为 string 或 json, 然后通过 `${{ steps.step-id.outputs.result }}` 来访问返回的结果; 如果我们设置为 json, 这个 json 对象可以直接通过 `${{ steps.step-id.outputs.result.key }}` 来访问 key 对应的 value.
+输出也有许多形式, 最简单的是 return 返回一个值. 我们可以设置 result-encoding 为 string 或 json, 然后通过 `${{ steps.step-id.outputs.result }}` 来访问返回的结果; 如果我们设置为 json, 这个 json 对象不可以通过 `${{ steps.step-id.outputs.result.key }}` 来访问 key 对应的 value, 还是只能用 `${{ steps.step-id.outputs.result }}` 获取整个 json  .
 此外, `core.exportVariable('NAME', value)` 可以将值写入环境变量, 后续可用从环境变量中直接获取此结果.
 
 示例如下:
 ```yaml
-      # input and output
-      - name: set input
-        id: set-input
-        run: |
-          echo 'hello=Hello' > $GITHUB_ENV
-          echo 'world=World' > $GITHUB_OUTPUT
-      - name: get and set env
-        id: get-and-set-env
-        uses: actions/github-script@main
-        env:
-          COMMA: ', '
-        with:
-          script: |
-            const hello = process.env.hello
-            const world = "${{ steps.set-input.outputs.world }}"
-            const comma = process.env.COMMA
-            console.log(hello, world, comma)
-            core.exportVariable('WORLD', hello + comma + world + '!')
-            return { greeting: hello + comma + 'world!', array: [1, 2, 3]}
-          result-encoding: json
-      - name: print output
-        run: |
-          echo $WORLD
-          echo "${{ steps.get-and-set-env.outputs.result.greeting }}"
-          echo "${{ steps.get-and-set-env.outputs.result.array }}"
+# input and output
+- name: set input
+  id: set-input
+  run: |
+    echo 'hello=Hello' > $GITHUB_ENV
+    echo 'world=World' > $GITHUB_OUTPUT
+- name: get and set env
+  id: get-and-set-env
+  uses: actions/github-script@main
+  env:
+    COMMA: ', '
+  with:
+    script: |
+      const hello = process.env.hello
+      const world = "${{ steps.set-input.outputs.world }}"
+      const comma = process.env.COMMA
+      console.log(hello, comma, world, '!')
+      core.exportVariable('WORLD', hello + comma + world + '!')
+      return { greeting: hello + comma + 'world!', array: [1, 2, 3]}
+    result-encoding: json
+- name: print output
+  run: |
+    echo $WORLD
+    echo "${{ steps.get-and-set-env.outputs.result.greeting }}"
+    echo "${{ steps.get-and-set-env.outputs.result }}"
 ```
+
+![JavaScript-advanced-input-output](image-16.png)
 
 #### 从文件运行 js
 
@@ -620,28 +622,23 @@ fs.writeFileSync(process.env.GITHUB_OUTPUT, 'output2=' + env2 + arg2);
 
 更好更安全的方法是利用 `require('path/to/script.js')(params, ...)` , 而在外部文件中使用 `module.exports = (params, ...)=>{scripts}` 的方式导出这个函数供我们 require 使用.
 
-如果导出的是 async 函数, 我们使用 `await require('$$path/to/script.js')(params, ...)` 的方式直接运行即可.
+如果导出的是 async 函数, 我们使用 `await require('$$path/to/script.js')(params, ...)` 的方式直接运行即可. (在外部文件中使用 `module.exports = async (params, ...)=>{scripts}` 的方式导出异步函数)
 
 代码片段如下:
-```yaml
-      # run script from file
-      - name: run outer script
-        uses: actions/github-script@main
-        with:
-          script: |
-            console.log('--run script from file');
-            const fs = require('fs')
-            const script = fs.readFileSync('.github/workflows/example/hello-world.js')
-            const text = "Eval script"
-            console.log(text);
-            Function('text', script)(text);
-            console.log('--run sync script from file');
-            const script_sync = require('.github/workflows/example/hello-world.js')
-            script_sync({github, context, core, text: "Synchronous function"})
-            console.log('--run async script from file');
-            const script_async = require('.github/workflows/example/hello-world-async.js')
-            await script_async({github, context, core, text: "Asynchronous function"})
+```javascript
+const fs = require('fs')
+const script = fs.readFileSync('.github/workflows/example/hello-world.js')
+const text = "Eval script"
+Function('text', script)(text);
+
+const script_sync = require('.github/workflows/example/hello-world-sync.js')
+script_sync(github, context, core, "Synchronous function")
+
+const script_async = require('.github/workflows/example/hello-world-async.js')
+await script_async(github, context, core, "Asynchronous function")
 ```
+
+![JavaScript-advanced-outer-scripts](image-17.png)
 
 #### 观察上下文中有哪些变量
 
@@ -651,31 +648,105 @@ fs.writeFileSync(process.env.GITHUB_OUTPUT, 'output2=' + env2 + arg2);
 
 
 ```yaml
-      # save context to file
-      - name: Save functions of github-script to file
-        uses: actions/github-script@main
-        with:
-          script: |
-            const fs = require('fs')
-            const util = require('util');
-            fs.writeFileSync('github-script.txt', 'this = ' + util.inspect(this) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'github = ' + util.inspect(github) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'context = ' + util.inspect(context) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'core = ' + util.inspect(core) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'glob = ' + util.inspect(glob) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'io = ' + util.inspect(io) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'exec = ' + util.inspect(exec) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'require = ' + util.inspect(require) + '\n\n')
-            process.env['INPUT_GITHUB-TOKEN'] = '***'
-            process.env['ACTIONS_RUNTIME_TOKEN'] = '***'
-            fs.appendFileSync('github-script.txt', 'process = ' + util.inspect(process) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'nodejs = ' + util.inspect(nodejs) + '\n\n')
-            fs.appendFileSync('github-script.txt', 'steps = ' + util.inspect(steps) + '\n\n')
-      - name: upload-artifact
-        uses: actions/upload-artifact@main
-        with:
-          name: github-script-context
-          path: github-script.txt
+# save context to file
+- name: Save functions of github-script to file
+  uses: actions/github-script@main
+  with:
+    script: |
+      const fs = require('fs')
+      const util = require('util');
+      fs.writeFileSync('github-script-context.txt', 'this = ' + util.inspect(this) + '\n\n')
+      fs.appendFileSync('github-script-context.txt', 'github = ' + util.inspect(github) + '\n\n')
+      fs.appendFileSync('github-script-context.txt', 'context = ' + util.inspect(context) + '\n\n')
+      fs.appendFileSync('github-script-context.txt', 'core = ' + util.inspect(core) + '\n\n')
+      fs.appendFileSync('github-script-context.txt', 'glob = ' + util.inspect(glob) + '\n\n')
+      fs.appendFileSync('github-script-context.txt', 'io = ' + util.inspect(io) + '\n\n')
+      fs.appendFileSync('github-script-context.txt', 'exec = ' + util.inspect(exec) + '\n\n')
+      fs.appendFileSync('github-script-context.txt', 'require = ' + util.inspect(require) + '\n\n')
+      process.env['INPUT_GITHUB-TOKEN'] = '***'
+      process.env['ACTIONS_RUNTIME_TOKEN'] = '***'
+      fs.appendFileSync('github-script-context.txt', 'process = ' + util.inspect(process) + '\n\n')
+      fs.appendFileSync('github-script-context.txt', 'global = ' + util.inspect(global) + '\n\n')
+- name: upload-artifact
+  uses: actions/upload-artifact@main
+  with:
+    name: github-script-context
+    path: github-script-context.txt
+```
+
+结果:
+github-script-context.txt
+```js
+this = <ref *1> Object [global] {
+  global: [Circular *1],
+  clearImmediate: [Function: clearImmediate],
+  setImmediate: [Function: setImmediate] {
+    [Symbol(nodejs.util.promisify.custom)]: [Getter]
+  },
+  clearInterval: [Function: clearInterval],
+  clearTimeout: [Function: clearTimeout],
+  setInterval: [Function: setInterval],
+  setTimeout: [Function: setTimeout] {
+    [Symbol(nodejs.util.promisify.custom)]: [Getter]
+  },
+  queueMicrotask: [Function: queueMicrotask],
+  structuredClone: [Function: structuredClone],
+  atob: [Getter/Setter],
+  btoa: [Getter/Setter],
+  performance: [Getter/Setter],
+  fetch: [AsyncFunction: fetch],
+  crypto: [Getter]
+}
+
+github = <ref *1> NewOctokit {
+  request: [Function: newApi] {
+    endpoint: [Function: bound endpointWithDefaults] {
+      DEFAULTS: [Object],
+      defaults: [Function: bound withDefaults],
+      merge: [Function: bound merge],
+      parse: [Function: parse]
+    },
+    defaults: [Function: bound withDefaults]
+  },
+  graphql: [Function: newApi] {
+    defaults: [Function: bound withDefaults],
+    endpoint: [Function: bound endpointWithDefaults] {
+      DEFAULTS: [Object],
+      defaults: [Function: bound withDefaults],
+      merge: [Function: bound merge],
+      parse: [Function: parse]
+    }
+  },
+  log: {
+    debug: [Function: debug],
+    info: [Function: info],
+    warn: [Function: bound warn],
+    error: [Function: bound error]
+  },
+  hook: [Function: bound register] {
+    api: {
+      remove: [Function: bound removeHook],
+      before: [Function: bound addHook],
+      error: [Function: bound addHook],
+      after: [Function: bound addHook],
+      wrap: [Function: bound addHook]
+    },
+    remove: [Function: bound removeHook],
+    before: [Function: bound addHook],
+    error: [Function: bound addHook],
+    after: [Function: bound addHook],
+    wrap: [Function: bound addHook]
+  },
+  auth: [Function: bound auth] AsyncFunction {
+    hook: [Function: bound hook] AsyncFunction
+  },
+  rest: {
+    actions: { octokit: [Circular *1], scope: 'actions', cache: {} },
+    activity: { octokit: [Circular *1], scope: 'activity', cache: {} },
+    apps: { octokit: [Circular *1], scope: 'apps', cache: {} },
+    billing: { octokit: [Circular *1], scope: 'billing', cache: {} },
+
+......
 ```
 
 #### **使用 REST API**
@@ -707,12 +778,154 @@ github.rest.repos.uploadReleaseAsset({
   owner: context.repo.owner,
   repo: context.repo.repo,
   release_id: process.env.RELEASE,
-  name: 'github-script-context' + context.runNumber + '.txt',
+  name: 'github-script-context-' + context.runNumber + '.txt',
   data: fs.readFileSync('github-script-context.txt'),
 })
 ```
 
 更多关于 [Github REST 的用法](#github-rest-api-教程) 参见正文独立章节
+
+#### 全部源码
+
+*.github/workflows/example-javascript-advanced.yaml*
+```YAML
+name: Example - Run Javascript Advanced
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  run-javascript:
+    runs-on: ubuntu-latest
+    # runs-on: self-hosted
+    steps:
+      - name: Check out code
+        uses: actions/checkout@main
+          
+      # input and output
+      - name: set input
+        id: set-input
+        run: |
+          echo 'hello=Hello' > $GITHUB_ENV
+          echo 'world=World' > $GITHUB_OUTPUT
+      - name: get and set env
+        id: get-and-set-env
+        uses: actions/github-script@main
+        env:
+          COMMA: ', '
+        with:
+          script: |
+            const hello = process.env.hello
+            const world = "${{ steps.set-input.outputs.world }}"
+            const comma = process.env.COMMA
+            console.log(hello, comma, world, '!')
+            core.exportVariable('WORLD', hello + comma + world + '!')
+            return { greeting: hello + comma + 'world!', array: [1, 2, 3]}
+          result-encoding: json
+      - name: print output
+        run: |
+          echo $WORLD
+          echo "${{ steps.get-and-set-env.outputs.result.greeting }}"
+          echo "${{ steps.get-and-set-env.outputs.result }}"
+        
+      # run script from file
+      - name: run outer script
+        uses: actions/github-script@main
+        with:
+          script: |
+            console.log('--- run script from file ---');
+            const fs = require('fs')
+            const script = fs.readFileSync('.github/workflows/example/hello-world.js')
+            const text = "Eval script"
+            Function('text', script)(text);
+            console.log('\n--- run sync script from file ---\n');
+            const script_sync = require('.github/workflows/example/hello-world-sync.js')
+            script_sync(github, context, core, "Synchronous function")
+            console.log('\n--- run async script from file ---\n');
+            const script_async = require('.github/workflows/example/hello-world-async.js')
+            await script_async(github, context, core, "Asynchronous function")
+      
+      # save context to file
+      - name: Save functions of github-script to file
+        uses: actions/github-script@main
+        with:
+          script: |
+            const fs = require('fs')
+            const util = require('util');
+            fs.writeFileSync('github-script-context.txt', 'this = ' + util.inspect(this) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'github = ' + util.inspect(github) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'context = ' + util.inspect(context) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'core = ' + util.inspect(core) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'glob = ' + util.inspect(glob) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'io = ' + util.inspect(io) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'exec = ' + util.inspect(exec) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'require = ' + util.inspect(require) + '\n\n')
+            process.env['INPUT_GITHUB-TOKEN'] = '***'
+            process.env['ACTIONS_RUNTIME_TOKEN'] = '***'
+            fs.appendFileSync('github-script-context.txt', 'process = ' + util.inspect(process) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'global = ' + util.inspect(global) + '\n\n')
+      - name: upload-artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: github-script-context
+          path: github-script-context.txt
+
+      # use REST Api to set latest release to hello world + runNumber
+      - name: Use REST Api to set latest release to hello world
+        uses: actions/github-script@main
+        with:
+          script: |
+            const response = await github.request('GET /repos/{owner}/{repo}/releases/latest', {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            console.log(response.data)
+            const release = response.data
+            const result = await github.request('PATCH /repos/{owner}/{repo}/releases/{release_id}', {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: release.id,
+              tag_name: 'v0.0.0.1',
+              name: 'Hello World Release',
+              body: 'Hello World ' + context.runNumber,
+            })
+            console.log(result.data)
+            core.exportVariable('RELEASE', release.id)
+      - name: Use REST Api to upload assets to release
+        uses: actions/github-script@main
+        with:
+          script: |
+            const fs = require('fs')
+            github.rest.repos.uploadReleaseAsset({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: process.env.RELEASE,
+              name: `github-script-context-${context.runNumber}.txt`,
+              data: fs.readFileSync('github-script-context.txt'),
+            })
+```
+
+*.github/workflows/example/hello-world.js*
+```js
+console.log('Hello, World!', text)
+```
+
+*.github/workflows/example/hello-world-sync.js*
+```js
+module.exports = (github, context, core, text) => {
+  console.log('Hello, World!', text)
+}
+```
+
+*.github/workflows/example/hello-world-async.js*
+```js
+module.exports = async (github, context, core, text) => {
+  // wait for 1 second
+  await new Promise(resolve => setTimeout(resolve, 1000))
+      .then(() => {console.log('Hello, World!', text)})
+}
+```
 
 ## Github REST Api 教程
 

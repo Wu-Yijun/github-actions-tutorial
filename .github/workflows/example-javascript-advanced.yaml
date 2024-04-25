@@ -113,3 +113,4 @@ jobs:
               name: `github-script-context-${context.runNumber}.txt`,
               data: fs.readFileSync('github-script-context.txt'),
             })
+            console.log(github.rest.repos);
