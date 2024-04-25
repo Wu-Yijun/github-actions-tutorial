@@ -644,3 +644,33 @@ fs.writeFileSync(process.env.GITHUB_OUTPUT, 'output2=' + env2 + arg2);
 #### 观察上下文中有哪些变量
 
 主要就是方便我们观察和使用, 把所有的变量打印出来保存到文件里
+
+使用 util.inspect
+
+```yaml
+      # save context to file
+      - name: Save functions of github-script to file
+        uses: actions/github-script@main
+        with:
+          script: |
+            const fs = require('fs')
+            const util = require('util');
+            fs.writeFileSync('github-script.txt', 'this = ' + util.inspect(this) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'github = ' + util.inspect(github) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'context = ' + util.inspect(context) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'core = ' + util.inspect(core) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'glob = ' + util.inspect(glob) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'io = ' + util.inspect(io) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'exec = ' + util.inspect(exec) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'require = ' + util.inspect(require) + '\n\n')
+            process.env['INPUT_GITHUB-TOKEN'] = '***'
+            process.env['ACTIONS_RUNTIME_TOKEN'] = '***'
+            fs.appendFileSync('github-script.txt', 'process = ' + util.inspect(process) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'nodejs = ' + util.inspect(nodejs) + '\n\n')
+            fs.appendFileSync('github-script.txt', 'steps = ' + util.inspect(steps) + '\n\n')
+      - name: upload-artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: github-script-context
+          path: github-script.txt
+```
