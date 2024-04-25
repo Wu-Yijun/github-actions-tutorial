@@ -26,7 +26,7 @@
       - [输入输出](#输入输出)
       - [执行外部 js](#从文件运行-js)
       - [调用Github REST API](#js-中使用-rest-api)
-  - Python 脚本
+  - [Python 脚本](#运行-python-脚本)
 - 进阶 - 外部 Action 的使用
   - 上传文件到 workflow: actions/upload-artifact@main [(外部链接)](https://github.com/actions/upload-artifact)
   - [使用仓库的文件和代码](#使用仓库的文件和代码): actions/checkout@main [(外部链接)](https://github.com/actions/checkout)
@@ -956,10 +956,10 @@ module.exports = async (github, context, core, text) => {
 
 ## 运行 Python 脚本
 
-我个人而言是很不喜欢 python 的, 但是考虑到很多人都沉溺于 Python 无法自拔, 搞个神经网路非得用 python, 我只好勉为其难地将最基础的 python 使用加入本文. 更多用法, 像什么 pytorch 的配置, 我肯定不会花时间写的.
-*其实我原先是打算先空着不写的, 前两天正好看到有人用 GitHub Actions 训练神经网路(一次训练要好几天), 我觉得很有意思, 才临时决定加入一个基本的 python 教程的*
+就我个人而言是很不喜欢 python 的, 但是考虑到很多人都沉溺于 Python 无法自拔, 搞个神经网路非得用 python, 我只好*勉为其难*地将最基础的 python 使用写成一节. 更多用法, 像什么 pytorch 的配置, anaconda 的使用, 我绝对不会花时间写的.
+*其实我原先是打算先空着不写的, 前两天正好看到有人白嫖 GitHub Actions 来训练神经网路(一次训练要好几天), 我觉得很有意思, 才临时决定加入一个基本的 python 教程的*
 
-我们用简单的 `numpy` 为例.
+**我们用简单的 `numpy` 为例.**
 
 首先, 安装 Python, 需要指定版本号. ` with: python-version: '3.12'` , 这其中有一个选项是缓存, 我们将其设置为 pip, 这样每一次运行 `pip install` 可以从缓存总加载已经安装好的库, 而不必重新安装, 节约时间
 接着, 我们安装依赖, 我这里示范了从 requirements.txt 中安装的方法, 如果不用 requirements.txt 可以直接 `- run: pip install numpy` 安装库.
@@ -1008,8 +1008,19 @@ a = np.array([1, 2, 3])
 print(a)
 ```
 
-运行结果:
+**运行结果:**
+可以看到, 在运行期间使用了缓存, 加速了 python 环境的安装.
+![python-runned](image-19.png)
 
+在 Actions 的缓存区也可以看到创建了一个缓存, 创建于 12 分钟前, 而在 2 分钟前被使用了.
+![python-cache](image-20.png)
+
+而首次运行的记录如下, 它没有检测到缓存, 于是在安装依赖项时下载了 `numpy` 库, 在运行结束时 `Post Setup Python` 将缓存保存了.
+![python-nocache](image-21.png)
+
+**Python 我就写这么多**, 更多信息可以到外部库的GitHub页面寻找 [actions/python(外部链接)](https://github.com/actions/setup-python) , 里面还有一些[高级用法(外部链接)](https://github.com/actions/setup-python?tab=readme-ov-file#advanced-usage)
+
+至于 Pytorch 如何安装, 等等的一系列问题, 我就不写了, 谁想写谁写(我可以帮你加到目录里), ~~Python 狗都不用(大雾)~~
 
 ## Github REST Api 教程
 
