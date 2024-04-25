@@ -36,7 +36,7 @@ jobs:
         run: |
           echo $WORLD
           echo "${{ steps.get-and-set-env.outputs.result.greeting }}"
-          echo "${{ steps.get-and-set-env.outputs.result.array }}"
+          echo "${{ steps.get-and-set-env.outputs.result }}"
         
       # run script from file
       - name: run outer script
