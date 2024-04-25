@@ -1,0 +1,22 @@
+name: Example - Run Javascript Advanced
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  run-python:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@main
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+      - name: Install dependencies
+        run: pip install -r .github/workflows/example/python/requirements.txt
+      - name: Run Python script
+        run: python .github/workflows/example/python/hello-world.py
+      
