@@ -618,7 +618,7 @@ fs.writeFileSync(process.env.GITHUB_OUTPUT, 'output2=' + env2 + arg2);
 
 更好更安全的方法是利用 `require('path/to/script.js')(params, ...)` , 而在外部文件中使用 `module.exports = (params, ...)=>{scripts}` 的方式导出这个函数供我们 require 使用.
 
-如果导出的是 async 函数, 我们使用 `await require('path/to/script.js')(params, ...)` 的方式直接运行即可.
+如果导出的是 async 函数, 我们使用 `await require('$$path/to/script.js')(params, ...)` 的方式直接运行即可.
 
 代码片段如下:
 ```yaml
@@ -641,4 +641,6 @@ fs.writeFileSync(process.env.GITHUB_OUTPUT, 'output2=' + env2 + arg2);
             await script_async({github, context, core, text: "Asynchronous function"})
 ```
 
-#### 观察
+#### 观察上下文中有哪些变量
+
+主要就是方便我们观察和使用, 把所有的变量打印出来保存到文件里
