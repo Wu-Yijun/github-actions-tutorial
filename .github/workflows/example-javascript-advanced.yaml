@@ -48,7 +48,6 @@ jobs:
             const script = fs.readFileSync('.github/workflows/example/hello-world.js')
             const text = "Eval script"
             console.log(text);
-            eval(script);
             Function('text', script)(text);
             
             console.log('--run sync script from file');
