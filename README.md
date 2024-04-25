@@ -699,6 +699,18 @@ const result = await github.request('PATCH /repos/{owner}/{repo}/releases/{relea
 })
 ```
 
-此外, github 还封装了不少可以直接用的操作在 `github.rest` 内, 比如 `github.rest.issues.get`, `github.repos.uploadReleaseAsset` 等等
+此外, github 还封装了不少可以直接用的操作在 `github.rest` 内, 比如 `github.rest.issues.get`, `github.repos.uploadReleaseAsset` 等等, 可以简化调用:
+```js
+github.rest.repos.uploadReleaseAsset({
+  owner: context.repo.owner,
+  repo: context.repo.repo,
+  release_id: process.env.RELEASE,
+  name: 'github-script-context' + context.runNumber + '.txt',
+  data: fs.readFileSync('github-script-context.txt'),
+})
+```
+
+更多关于 [Github REST 的用法](#github-rest-api-教程) 参见正文独立章节
 
 ## Github REST Api 教程
+
