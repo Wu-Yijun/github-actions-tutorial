@@ -956,6 +956,7 @@ module.exports = async (github, context, core, text) => {
 
 ## 运行 Python 脚本
 
+我个人而言是很不喜欢 python 的, 但是考虑到很多人都沉溺于 Python 无法自拔, 搞个神经网路非得用 python, 我只好勉为其难地将最基础的python使用加入
 
 ## Github REST Api 教程
 
