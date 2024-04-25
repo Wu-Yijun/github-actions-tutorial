@@ -28,7 +28,7 @@ jobs:
             const hello = process.env.hello
             const world = "${{ steps.set-input.outputs.world }}"
             const comma = process.env.COMMA
-            console.log(hello, world, comma)
+            console.log(hello, comma, world, '!')
             core.exportVariable('WORLD', hello + comma + world + '!')
             return { greeting: hello + comma + 'world!', array: [1, 2, 3]}
           result-encoding: json
@@ -74,6 +74,7 @@ jobs:
             process.env['ACTIONS_RUNTIME_TOKEN'] = '***'
             fs.appendFileSync('github-script-context.txt', 'process = ' + util.inspect(process) + '\n\n')
             fs.appendFileSync('github-script-context.txt', 'steps = ' + util.inspect(steps) + '\n\n')
+            fs.appendFileSync('github-script-context.txt', 'nodejs = ' + util.inspect(nodejs) + '\n\n')
       - name: upload-artifact
         uses: actions/upload-artifact@main
         with:
