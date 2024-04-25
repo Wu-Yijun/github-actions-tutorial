@@ -956,7 +956,8 @@ module.exports = async (github, context, core, text) => {
 
 ## 运行 Python 脚本
 
-我个人而言是很不喜欢 python 的, 但是考虑到很多人都沉溺于 Python 无法自拔, 搞个神经网路非得用 python, 我只好勉为其难地将最基础的python使用加入
+我个人而言是很不喜欢 python 的, 但是考虑到很多人都沉溺于 Python 无法自拔, 搞个神经网路非得用 python, 我只好勉为其难地将最基础的 python 使用加入本文. 更多用法, 像什么 pytorch 的配置, 我肯定不会花时间写的.
+*其实我原先是打算先空着不写的, 前两天正好看到有人用 GitHub Actions 训练神经网路(一次训练要好几天), 我觉得很有意思, 才临时决定加入一个基本的 python 教程的*
 
 ## Github REST Api 教程
 
