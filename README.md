@@ -790,6 +790,9 @@ github.rest.repos.uploadReleaseAsset({
 })
 ```
 
+**注意:** `github.rest.name.fun({})` 的返回结果是 `Promise(<response>)` , 如果需要获取返回结果请多加一个 await.
+
+![JavaScript-advanced-REST-API](image-18.png)
 
 更多关于 [Github REST 的用法](#github-rest-api-教程) 见正文独立章节
 
@@ -905,13 +908,13 @@ jobs:
         with:
           script: |
             // listReleaseAssets
-            const ids = github.rest.repos.listReleaseAssets({
+            const ids = await github.rest.repos.listReleaseAssets({
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: process.env.RELEASE,
             });
             // deleteReleaseAsset
-            for (const id of ids) {
+            for (const id of ids.data) {
               github.rest.repos.deleteReleaseAsset({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
