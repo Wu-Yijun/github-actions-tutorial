@@ -111,9 +111,8 @@ jobs:
               repo: context.repo.repo,
               release_id: process.env.RELEASE,
             });
-            console.log(ids)
             // deleteReleaseAsset
-            for (const id of ids) {
+            for (const id of ids.data) {
               github.rest.repos.deleteReleaseAsset({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
