@@ -73,7 +73,7 @@ jobs:
             process.env['INPUT_GITHUB-TOKEN'] = '***'
             process.env['ACTIONS_RUNTIME_TOKEN'] = '***'
             fs.appendFileSync('github-script-context.txt', 'process = ' + util.inspect(process) + '\n\n')
-            
+            fs.appendFileSync('github-script-context.txt', 'global = ' + util.inspect(global) + '\n\n')
       - name: upload-artifact
         uses: actions/upload-artifact@main
         with:
@@ -105,6 +105,7 @@ jobs:
         uses: actions/github-script@main
         with:
           script: |
+            const fs = require('fs')
             github.rest.repos.uploadReleaseAsset({
               owner: context.repo.owner,
               repo: context.repo.repo,
