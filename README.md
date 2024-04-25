@@ -19,13 +19,17 @@
   - 在工作间传递文件
 - 进阶 - 运行其它格式的脚本
   - [Javascript 脚本](#运行-javascript-脚本)
-    - [高级用法](#更好的执行脚本)
+    - [简易/基本用法](#javascript-脚本-启动)
+    - [高级用法](#更好的执行-js-脚本)
+      - [输入输出](#输入输出)
+      - [执行外部 js](#从文件运行-js)
+      - [调用Github REST API](#js-中使用-rest-api)
   - Python 脚本
 - 进阶 - 外部 Action 的使用
   - 上传文件到 workflow: actions/upload-artifact@main [(repo hyperlink)](https://github.com/actions/upload-artifact)
   - 使用仓库的文件和代码: actions/checkout@main [(repo hyperlink)](https://github.com/actions/checkout)
   - 创建和发布 release: actions/create-release@main [(repo hyperlink)](https://github.com/actions/create-release), actions/upload-release-asset@main [(repo hyperlink)](https://github.com/actions/upload-release-asset)
-  - 使用 JavaScript 脚本: actions/github-script@main [(repo hyperlink)](https://github.com/actions/upload-artifact)
+  - [使用 JavaScript 脚本](#更好的执行-js-脚本): actions/github-script@main [(repo hyperlink)](https://github.com/actions/github-script)
 - 进阶 - [Github REST API](#github-rest-api-教程)
 - 高级 - 更多技巧
   - Matrix 矩阵, 复用代码
@@ -558,7 +562,7 @@ fs.writeFileSync(process.env.GITHUB_OUTPUT, 'output2=' + env2 + arg2);
 
 ![javascript-output](image-13.png)
 
-### 更好的执行脚本
+### 更好的执行 js 脚本
 
 我们可以用外部库 [actions/github-script](https://github.com/actions/github-script)
 
@@ -566,14 +570,15 @@ fs.writeFileSync(process.env.GITHUB_OUTPUT, 'output2=' + env2 + arg2);
 
 #### 库内读写权限
 
-不过在使用一些功能前, 我们需要更改GitHub actions 的权限
+不过在使用一些功能前, 我们需要更改GitHub actions 的权限, 从只读变为可写
 如下所示
 ![permission](image-14.png)
 ![write-permission](image-15.png)
 
 #### 概述
 
-这个库有优点也有缺点, 优点就是它先天的提供了一些可用函数, 方法, 变量, 不需要我们手动加载一些库或环境, 并将很多常用操作封装好了, 我们可用快捷地一键套用. 而缺点则是它是直接从 script 加载的脚本, 不能从文件加载(不过可在 script 中 require 其它js), 编辑时没有语法高亮, 最后, 报错信息比较模糊, 不利于 debug.
+这个库有优点也有缺点, 优点就是它先天的提供了一些可用函数, 方法, 变量, 不需要我们手动加载一些库或环境, 并将很多常用操作封装好了, 我们可用快捷地一键套用. 
+而缺点则是它是直接从 yaml 加载的脚本, 不能从文件加载(不过可在 script 中 require 其它 js ), 编辑时没有语法高亮, 最后, 报错信息比较模糊, 不利于 debug.
 
 #### 输入输出
 
@@ -749,7 +754,7 @@ github = <ref *1> NewOctokit {
 ......
 ```
 
-#### **使用 REST API**
+#### js 中使用 REST API
 
 Octokit 和 REST Api 才是这个库的**核心**所在.
 
@@ -772,7 +777,7 @@ const result = await github.request('PATCH /repos/{owner}/{repo}/releases/{relea
 })
 ```
 
-此外, github 还封装了不少可以直接用的操作在 `github.rest` 内, 比如 `github.rest.issues.get`, `github.repos.uploadReleaseAsset` 等等, 可以简化调用:
+此外, github 还封装了不少可以直接用的操作在 `github.rest` 内, 比如 `github.rest.issues.get`, `github.repos.uploadReleaseAsset` 等等(全部列表可参见 [octokit/rest.js](https://octokit.github.io/rest.js)), 可以简化调用:
 ```js
 github.rest.repos.uploadReleaseAsset({
   owner: context.repo.owner,
@@ -783,7 +788,8 @@ github.rest.repos.uploadReleaseAsset({
 })
 ```
 
-更多关于 [Github REST 的用法](#github-rest-api-教程) 参见正文独立章节
+
+更多关于 [Github REST 的用法](#github-rest-api-教程) 见正文独立章节
 
 #### 全部源码
 
@@ -896,6 +902,21 @@ jobs:
         uses: actions/github-script@main
         with:
           script: |
+            // listReleaseAssets
+            const ids = github.rest.repos.listReleaseAssets({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: process.env.RELEASE,
+            });
+            // deleteReleaseAsset
+            for (const id of ids) {
+              github.rest.repos.deleteReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                asset_id: id.id,
+              });
+            }
+            // uploadReleaseAsset
             const fs = require('fs')
             github.rest.repos.uploadReleaseAsset({
               owner: context.repo.owner,
@@ -904,6 +925,7 @@ jobs:
               name: `github-script-context-${context.runNumber}.txt`,
               data: fs.readFileSync('github-script-context.txt'),
             })
+
 ```
 
 *.github/workflows/example/hello-world.js*
