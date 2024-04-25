@@ -29,7 +29,7 @@
   - Python 脚本
 - 进阶 - 外部 Action 的使用
   - 上传文件到 workflow: actions/upload-artifact@main [(外部链接)](https://github.com/actions/upload-artifact)
-  - 使用仓库的文件和代码: actions/checkout@main [(外部链接)](https://github.com/actions/checkout)
+  - [使用仓库的文件和代码](#使用仓库的文件和代码): actions/checkout@main [(外部链接)](https://github.com/actions/checkout)
   - 创建和发布 release: actions/create-release@main [(外部链接)](https://github.com/actions/create-release), actions/upload-release-asset@main [(外部链接)](https://github.com/actions/upload-release-asset)
   - [使用 JavaScript 脚本](#更好的执行-js-脚本): actions/github-script@main [(外部链接)](https://github.com/actions/github-script)
 - 进阶 - [Github REST API](#github-rest-api-教程)
