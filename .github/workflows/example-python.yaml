@@ -1,4 +1,4 @@
-name: Example - Run Javascript Advanced
+name: Example - Run Python
 
 on:
   push:

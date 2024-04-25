@@ -959,5 +959,57 @@ module.exports = async (github, context, core, text) => {
 我个人而言是很不喜欢 python 的, 但是考虑到很多人都沉溺于 Python 无法自拔, 搞个神经网路非得用 python, 我只好勉为其难地将最基础的 python 使用加入本文. 更多用法, 像什么 pytorch 的配置, 我肯定不会花时间写的.
 *其实我原先是打算先空着不写的, 前两天正好看到有人用 GitHub Actions 训练神经网路(一次训练要好几天), 我觉得很有意思, 才临时决定加入一个基本的 python 教程的*
 
+我们用简单的 `numpy` 为例.
+
+首先, 安装 Python, 需要指定版本号. ` with: python-version: '3.12'` , 这其中有一个选项是缓存, 我们将其设置为 pip, 这样每一次运行 `pip install` 可以从缓存总加载已经安装好的库, 而不必重新安装, 节约时间
+接着, 我们安装依赖, 我这里示范了从 requirements.txt 中安装的方法, 如果不用 requirements.txt 可以直接 `- run: pip install numpy` 安装库.
+最后, 我们直接运行 python 脚本即可.
+
+源码如下:
+
+*.github/workflows/example/example-python.yaml*
+```yaml
+name: Example - Run Python
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  run-python:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@main
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+      - name: Install dependencies
+        run: pip install -r .github/workflows/example/python/requirements.txt
+      - name: Run Python script
+        run: python .github/workflows/example/python/hello-world.py
+```
+
+*.github/workflows/example/python/requirements.txt*
+``` py
+# sample requirements.txt
+numpy
+```
+
+*.github/workflows/example/python/hello-world.py*
+```py
+import numpy as np
+
+print("Hello, world!")
+
+a = np.array([1, 2, 3])
+print(a)
+```
+
+运行结果:
+
+
 ## Github REST Api 教程
 
