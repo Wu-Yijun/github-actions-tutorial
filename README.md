@@ -577,4 +577,68 @@ fs.writeFileSync(process.env.GITHUB_OUTPUT, 'output2=' + env2 + arg2);
 
 有多种形式提供输入, 一种是设置环境变量, 使用 `process.env.NAME` 调用, 一种是使用 `${{ steps.step-id.outputs.NAME }}` 作为文本直接嵌入, 最后是设置在 input 里使用 `core.getInput(NAME)` 获取 yaml 的 input 的输入
 
-输出也有许多形式, 最简单的是 return 返回一个值. 我们可以设置 result-encoding 为 string 或 json
+输出也有许多形式, 最简单的是 return 返回一个值. 我们可以设置 result-encoding 为 string 或 json, 然后通过 `${{ steps.step-id.outputs.result }}` 来访问返回的结果; 如果我们设置为 json, 这个 json 对象可以直接通过 `${{ steps.step-id.outputs.result.key }}` 来访问 key 对应的 value.
+此外, `core.exportVariable('NAME', value)` 可以将值写入环境变量, 后续可用从环境变量中直接获取此结果.
+
+示例如下:
+```yaml
+      # input and output
+      - name: set input
+        id: set-input
+        run: |
+          echo 'hello=Hello' > $GITHUB_ENV
+          echo 'world=World' > $GITHUB_OUTPUT
+      - name: get and set env
+        id: get-and-set-env
+        uses: actions/github-script@main
+        env:
+          COMMA: ', '
+        with:
+          script: |
+            const hello = process.env.hello
+            const world = "${{ steps.set-input.outputs.world }}"
+            const comma = process.env.COMMA
+            console.log(hello, world, comma)
+            core.exportVariable('WORLD', hello + comma + world + '!')
+            return { greeting: hello + comma + 'world!', array: [1, 2, 3]}
+          result-encoding: json
+      - name: print output
+        run: |
+          echo $WORLD
+          echo "${{ steps.get-and-set-env.outputs.result.greeting }}"
+          echo "${{ steps.get-and-set-env.outputs.result.array }}"
+```
+
+#### 从文件运行 js
+
+前文提到, 在 yaml 中编辑 js 很容易出错, 因此我们可以在其它文件中写好, 然后在yaml中引入的方式运行.
+而这个库 `actions/github-script` 不能直接运行文件, 因此需要我们手动导入. 方法有三种.
+
+最简单的就是构造一个函数, 然后运行它, 格式为 `Function('param-Name-1', 'param-Name-2', ..., 'scripts')(p1, p2, ...)`, 其中 Function 通过 script 文本构造一个函数, 该函数的输入参数列表直接写在前面, 然后我们在Function后面输入参数调用这个函数, 实现运行的效果.
+
+更好更安全的方法是利用 `require('path/to/script.js')(params, ...)` , 而在外部文件中使用 `module.exports = (params, ...)=>{scripts}` 的方式导出这个函数供我们 require 使用.
+
+如果导出的是 async 函数, 我们使用 `await require('path/to/script.js')(params, ...)` 的方式直接运行即可.
+
+代码片段如下:
+```yaml
+      # run script from file
+      - name: run outer script
+        uses: actions/github-script@main
+        with:
+          script: |
+            console.log('--run script from file');
+            const fs = require('fs')
+            const script = fs.readFileSync('.github/workflows/example/hello-world.js')
+            const text = "Eval script"
+            console.log(text);
+            Function('text', script)(text);
+            console.log('--run sync script from file');
+            const script_sync = require('.github/workflows/example/hello-world.js')
+            script_sync({github, context, core, text: "Synchronous function"})
+            console.log('--run async script from file');
+            const script_async = require('.github/workflows/example/hello-world-async.js')
+            await script_async({github, context, core, text: "Asynchronous function"})
+```
+
+#### 观察

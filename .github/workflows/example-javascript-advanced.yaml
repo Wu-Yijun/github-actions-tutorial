@@ -6,7 +6,7 @@ on:
 
 jobs:
   run-javascript:
-    runs-on: ubuntu-23.04
+    runs-on: ubuntu-latest
     # runs-on: self-hosted
     steps:
       - name: Check out code
@@ -48,13 +48,15 @@ jobs:
             const script = fs.readFileSync('.github/workflows/example/hello-world.js')
             const text = "Eval script"
             console.log(text);
+            eval(script);
             Function('text', script)(text);
+            
             console.log('--run sync script from file');
             const script_sync = require('.github/workflows/example/hello-world.js')
-            script_sync({github, context, core, text: "Synchronous function"})
+            script_sync(github, context, core, "Synchronous function")
             console.log('--run async script from file');
             const script_async = require('.github/workflows/example/hello-world-async.js')
-            await script_async({github, context, core, text: "Asynchronous function"})
+            await script_async(github, context, core, "Asynchronous function")
       
       # save context to file
       - name: Save functions of github-script to file
