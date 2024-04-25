@@ -6,7 +6,7 @@ on:
 
 jobs:
   run-javascript:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-23.04
     # runs-on: self-hosted
     steps:
       - name: Check out code
