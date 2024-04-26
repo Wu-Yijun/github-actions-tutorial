@@ -83,8 +83,8 @@ jobs:
       # Actions to download artifacts
       - name: create tmp directory
         run: |
-          mkdir /tmp2
-          mkdir /tmp3
+          mkdir tmp2
+          mkdir tmp3
       - name: download file
         uses: actions/download-artifact@main
         with:
