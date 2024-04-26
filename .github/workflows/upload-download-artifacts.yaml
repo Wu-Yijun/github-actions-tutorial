@@ -47,8 +47,8 @@ jobs:
             hello/*.txt
             !hello/*[1-9]*.txt
       # Node.js script to upload artifacts
-      - name: Install package
-        run: npm install @actions/artifact
+      # - name: Install package
+      #   run: npm install @actions/artifact
       - name: upload artifacts with node.js
         id: upload-js-artifacts
         uses: actions/github-script@main
@@ -60,7 +60,7 @@ jobs:
               // name of the artifact
               'js-artifact',
               // files to include (supports absolute and relative paths)
-              ['./world.txt'],
+              ['/world.txt'],
               { // optional
                 retentionDays: 10
               }
@@ -90,8 +90,6 @@ jobs:
           name: artifact2
           path: /tmp2
       # Node.js script to download artifacts
-      - name: Install package
-        run: npm install @actions/artifact
       - name: download artifacts with node.js
         uses: actions/github-script@main
         with:
