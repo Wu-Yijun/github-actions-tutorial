@@ -60,7 +60,7 @@ jobs:
               // name of the artifact
               'js-artifact',
               // files to include (supports absolute and relative paths)
-              ['world.txt', 'hello/'],
+              ['world.txt', 'hello/world.txt', 'hello/earth.txt'],
               '.',
               { // optional
                 retentionDays: 10
