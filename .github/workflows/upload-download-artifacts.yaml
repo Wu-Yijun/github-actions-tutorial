@@ -122,8 +122,8 @@ jobs:
               artifact_id: id,
               archive_format: 'zip',
             })
-            // write data to tmp3/file.zip
-            require('fs').writeFileSync('tmp3/file.zip', Buffer.from(downloadPath.data))
+            // write data to tmp3.zip
+            require('fs').writeFileSync('tmp3.zip', Buffer.from(downloadPath.data))
 
             // delete artifact
             var {id} = await artifact.deleteArtifact('artifact1')
@@ -147,13 +147,15 @@ jobs:
                 'X-GitHub-Api-Version': '2022-11-28'
               }
             })
-            // write data to tmp4/file.zip
-            require('fs').writeFileSync('tmp4/file.zip', Buffer.from(response.data))
+            // write data to tmp4.zip
+            require('fs').writeFileSync('tmp4.zip', Buffer.from(response.data))
 
       - name: Decompress downloaded file
         run: |
-          unzip tmp3/file.zip -d tmp3
-          unzip tmp4/file.zip -d tmp4
+          mkdir tmp3
+          mkdir tmp4
+          unzip tmp3.zip -d tmp3/
+          unzip tmp4.zip -d tmp4/
       - name: Delete node_modules/ and List files
         run: |
           rm -rf node_modules/
