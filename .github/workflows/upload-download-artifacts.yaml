@@ -79,7 +79,7 @@ jobs:
       - name: Delete node_modules/ and List files
         run: |
           rm -rf node_modules/
-          ls -l -R
+          tree
   
   download-artifacts:
     runs-on: ubuntu-latest
@@ -156,8 +156,6 @@ jobs:
           mkdir tmp4
           unzip tmp3.zip -d tmp3/
           unzip tmp4.zip -d tmp4/
-      - name: Delete node_modules/ and List files
-        run: |
           rm -rf node_modules/
-          ls -l -R
-          tree
+      - name: List files
+        run: tree
