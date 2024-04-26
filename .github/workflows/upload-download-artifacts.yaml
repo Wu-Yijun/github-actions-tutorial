@@ -18,6 +18,8 @@ jobs:
           echo "Hello, world2" > world.txt
           echo "Hello, earth" > earth.txt
           echo "Hello, Nothing" > nothing2do.txt
+          cd ..
+          ls -l -R
       # Actions to upload artifacts
       - name: upload file
         uses: actions/upload-artifact@main
