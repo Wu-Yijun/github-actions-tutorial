@@ -47,8 +47,8 @@ jobs:
             hello/*.txt
             !hello/*[1-9]*.txt
       # Node.js script to upload artifacts
-      # - name: Install package
-      #   run: npm install @actions/artifact
+      - name: Install package
+        run: npm i @actions/artifact
       - name: upload artifacts with node.js
         id: upload-js-artifacts
         uses: actions/github-script@main
@@ -90,6 +90,8 @@ jobs:
           name: artifact2
           path: /tmp2
       # Node.js script to download artifacts
+      - name: Install package
+        run: npm i @actions/artifact
       - name: download artifacts with node.js
         uses: actions/github-script@main
         with:
@@ -108,7 +110,7 @@ jobs:
             // Use name to download the artifact
             let {id, name, size} = await artifact.downloadArtifact('artifact3')
             console.log(`Find artifact ${name} with id: ${id} (bytes: ${size}`)
-            let {downloadPath} = await artifact.downloadArtifact(id, { path: '/tmp3' })
+            let {downloadPath} = await github.rest.repos.downloadArtifact(id, { path: '/tmp3' })
             console.log(`Downloaded artifact ${id} to: ${downloadPath}`)
 
             // delete artifact
