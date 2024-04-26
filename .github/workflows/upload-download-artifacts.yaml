@@ -115,7 +115,7 @@ jobs:
             // Use name to download the artifact
             var {id, name, size} = await artifact.getArtifact('artifact3')
             console.log(`Find artifact ${name} with id: ${id} (bytes: ${size}`)
-            var {downloadPath} = await github.rest.repos.downloadArtifact(id, { path: '/tmp3' })
+            var {downloadPath} = await github.rest.actions.downloadArtifact(id, { path: '/tmp3' })
             console.log(`Downloaded artifact ${id} to: ${downloadPath}`)
 
             // delete artifact
@@ -139,6 +139,6 @@ jobs:
                 'X-GitHub-Api-Version': '2022-11-28'
               }
             })
-      - name: list files
+      - name: List files
         run: |
           ls -l -R
