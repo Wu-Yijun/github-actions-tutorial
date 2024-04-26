@@ -58,7 +58,7 @@ jobs:
             const artifact = new DefaultArtifactClient()
             const {id, size} = await artifact.uploadArtifact(
               // name of the artifact
-              'js-artifact',
+              'my-artifact',
               // files to include (supports absolute and relative paths)
               ['/world.txt'],
               { // optional
