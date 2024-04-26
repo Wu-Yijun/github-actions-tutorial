@@ -76,8 +76,9 @@ jobs:
             console.log(`Downloaded artifact ${id} to: ${downloadPath}`)
 
             return id
-      - name: List files
+      - name: Delete node_modules/ and List files
         run: |
+          rm -rf node_modules/
           ls -l -R
   
   download-artifacts:
@@ -145,6 +146,7 @@ jobs:
                 'X-GitHub-Api-Version': '2022-11-28'
               }
             })
-      - name: List files
+      - name: Delete node_modules/ and List files
         run: |
+          rm -rf node_modules/
           ls -l -R
