@@ -18,7 +18,7 @@
   - [最基本的示例](#一个基本的简单的例子)
 - 进阶 - 文件和参数的传递
   - [设置和使用环境变量, 在步骤间传递参数, 在工作间传递参数](#环境参数的定义,-使用,-与传递)
-  - 在工作间传递文件
+  - [在工作间传递文件](#上传和下载附件)
 - 进阶 - 运行其它格式的脚本
   - [Javascript 脚本](#运行-javascript-脚本)
     - [简易/基本用法](#javascript-脚本-启动)
@@ -28,10 +28,10 @@
       - [调用Github REST API](#js-中使用-rest-api)
   - [Python 脚本](#运行-python-脚本)
 - 进阶 - 外部 Action 的使用
-  - 上传文件到 workflow: actions/upload-artifact@main [(外部链接)](https://github.com/actions/upload-artifact)
-  - [使用仓库的文件和代码](#使用仓库的文件和代码): actions/checkout@main [(外部链接)](https://github.com/actions/checkout)
-  - 创建和发布 release: actions/create-release@main [(外部链接)](https://github.com/actions/create-release), actions/upload-release-asset@main [(外部链接)](https://github.com/actions/upload-release-asset)
-  - [使用 JavaScript 脚本](#更好的执行-js-脚本): actions/github-script@main [(外部链接)](https://github.com/actions/github-script)
+  - [上传和下载文件到/从Artifact区](#上传和下载附件): actions/upload-artifact\@main [(外部链接)](https://github.com/actions/upload-artifact) actions/download-artifact\@main [(外部链接)](https://github.com/actions/download-artifact) \@actions/artifact [*(npm 库)*(外部链接)](https://github.com/actions/toolkit/tree/main/packages/artifact) 
+  - [使用仓库的文件和代码](#使用仓库的文件和代码): actions/checkout\@main [(外部链接)](https://github.com/actions/checkout)
+  - 创建和发布 release: actions/create-release\@main [(外部链接)](https://github.com/actions/create-release), actions/upload-release-asset\@main [(外部链接)](https://github.com/actions/upload-release-asset)
+  - [使用 JavaScript 脚本](#更好的执行-js-脚本): actions/github-script\@main [(外部链接)](https://github.com/actions/github-script)
 - 进阶 - [Github REST API](#github-rest-api-教程)
 - 高级 - 更多技巧
   - Matrix 矩阵, 复用代码
@@ -275,9 +275,9 @@ jobs: # 定义工作流
           echo $HELLO2
           echo $HELLO2 > hello2.txt
       - name: upload-artifact # 步骤 3 的步骤名称
-        # 使用 uses 关键字引用 actions/upload-artifact@v2 动作
+        # 使用 uses 关键字引用 actions/upload-artifact\@v2 动作
         # 这个动作会将 hello2.txt 上传到 GitHub Actions 的 Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact\@v2
         with: # 输入参数列表
           name: hello2
           path: hello2.txt
@@ -301,7 +301,7 @@ jobs: # 定义工作流
 - Set up job 根据我们的设置, 配置系统环境, 环境变量(比如 GitHub Token) 等,
 - 然后就是我们的第一个步骤, 它打印出来了第一个变量. 注意到我们执行的命令已在执行前经将 action 的变量替换为了字符串, 变成 echo "Hello, default string"
 - 第二个步骤是脚本块, 它三行按顺序逐次执行, 然后创建了一个 hello2.txt (在项目的根目录下). 虚拟机里的文件是从项目中下载下来的, 不会影响项目本身的文件, 因此你在项目中也找不到hello.txt. 
-- 第三步我们使用外部库 `actions/upload-artifact@v2` 将这个文件 hello2.txt 上传到**此workflow的附件区**, 可供下载.
+- 第三步我们使用外部库 `actions/upload-artifact\@v2` 将这个文件 hello2.txt 上传到**此workflow的附件区**, 可供下载.
 - 最后就是结束和清理了.
 
 ![echo-hello](image-6.png)
@@ -448,7 +448,7 @@ echo "{name}={value}" >> $GITHUB_OUTPUT
 ```YAML
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout\@v4
       # ...
 ```
 
@@ -490,11 +490,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # 获取代码(这样可以运行储存库中你写的代码)
-      - uses: actions/checkout@v4
+      - uses: actions/checkout\@v4
       # 安装 Node
       # 其实这一步可以略去, 没什么影响
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node\@v4
         with:
           node-version: latest
       # 运行 JS 代码
@@ -599,7 +599,7 @@ fs.writeFileSync(process.env.GITHUB_OUTPUT, 'output2=' + env2 + arg2);
     echo 'world=World' > $GITHUB_OUTPUT
 - name: get and set env
   id: get-and-set-env
-  uses: actions/github-script@main
+  uses: actions/github-script\@main
   env:
     COMMA: ', '
   with:
@@ -657,7 +657,7 @@ await script_async(github, context, core, "Asynchronous function")
 ```yaml
 # save context to file
 - name: Save functions of github-script to file
-  uses: actions/github-script@main
+  uses: actions/github-script\@main
   with:
     script: |
       const fs = require('fs')
@@ -675,7 +675,7 @@ await script_async(github, context, core, "Asynchronous function")
       fs.appendFileSync('github-script-context.txt', 'process = ' + util.inspect(process) + '\n\n')
       fs.appendFileSync('github-script-context.txt', 'global = ' + util.inspect(global) + '\n\n')
 - name: upload-artifact
-  uses: actions/upload-artifact@main
+  uses: actions/upload-artifact\@main
   with:
     name: github-script-context
     path: github-script-context.txt
@@ -812,7 +812,7 @@ jobs:
     # runs-on: self-hosted
     steps:
       - name: Check out code
-        uses: actions/checkout@main
+        uses: actions/checkout\@main
           
       # input and output
       - name: set input
@@ -822,7 +822,7 @@ jobs:
           echo 'world=World' > $GITHUB_OUTPUT
       - name: get and set env
         id: get-and-set-env
-        uses: actions/github-script@main
+        uses: actions/github-script\@main
         env:
           COMMA: ', '
         with:
@@ -842,7 +842,7 @@ jobs:
         
       # run script from file
       - name: run outer script
-        uses: actions/github-script@main
+        uses: actions/github-script\@main
         with:
           script: |
             console.log('--- run script from file ---');
@@ -859,7 +859,7 @@ jobs:
       
       # save context to file
       - name: Save functions of github-script to file
-        uses: actions/github-script@main
+        uses: actions/github-script\@main
         with:
           script: |
             const fs = require('fs')
@@ -877,14 +877,14 @@ jobs:
             fs.appendFileSync('github-script-context.txt', 'process = ' + util.inspect(process) + '\n\n')
             fs.appendFileSync('github-script-context.txt', 'global = ' + util.inspect(global) + '\n\n')
       - name: upload-artifact
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact\@main
         with:
           name: github-script-context
           path: github-script-context.txt
 
       # use REST Api to set latest release to hello world + runNumber
       - name: Use REST Api to set latest release to hello world
-        uses: actions/github-script@main
+        uses: actions/github-script\@main
         with:
           script: |
             const response = await github.request('GET /repos/{owner}/{repo}/releases/latest', {
@@ -904,7 +904,7 @@ jobs:
             console.log(result.data)
             core.exportVariable('RELEASE', release.id)
       - name: Use REST Api to upload assets to release
-        uses: actions/github-script@main
+        uses: actions/github-script\@main
         with:
           script: |
             // listReleaseAssets
@@ -980,9 +980,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@main
+        uses: actions/checkout\@main
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python\@main
         with:
           python-version: '3.12'
           cache: 'pip'
@@ -1021,6 +1021,19 @@ print(a)
 **Python 我就写这么多**, 更多信息可以到外部库的GitHub页面寻找 [actions/python(外部链接)](https://github.com/actions/setup-python) , 里面还有一些[高级用法(外部链接)](https://github.com/actions/setup-python?tab=readme-ov-file#advanced-usage)
 
 至于 Pytorch 如何安装, 等等的一系列问题, 我就不写了, 谁想写谁写(我可以帮你加到目录里), ~~Python 狗都不用(大雾)~~
+
+## 上传和下载附件
+
+**同样也用于在工作间传递文件.**
+
+这是个很轻松的话题, 毕竟只是简单介绍一下三个库的使用.
+
+### Actions 库
+
+最经典的就是上传和下载 Actions 库.
+
+上传文件
+
 
 ## Github REST Api 教程
 

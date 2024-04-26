@@ -1,0 +1,137 @@
+name: Example - File Upload/Download
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  upload-artifacts:
+    runs-on: ubuntu-latest
+    outputs:
+      js-artifacts-id: ${{ steps.upload-js-artifacts.outputs.result }}
+    steps: 
+      - name: create file
+        run: |
+          echo "Hello, world" > world.txt
+          mkdir hello
+          cd hello
+          echo "Hello, world2" > world.txt
+          echo "Hello, earth" > earth.txt
+          echo "Hello, Nothing" > nothing2do.txt
+      # Actions to upload artifacts
+      - name: upload file
+        uses: actions/upload-artifact@main
+        with:
+          name: artifact1
+          path: world.txt
+          compression-level: 0
+      - name: upload directory
+        uses: actions/upload-artifact@main
+        with:
+          name: artifact2
+          path: hello
+      - name: upload multiple files
+        uses: actions/upload-artifact@main
+        with:
+          name: artifact3
+          path: |
+            world.txt
+            hello
+      - name: upload with Wildcard Pattern and Exclusions
+        uses: actions/upload-artifact@main
+        with:
+          name: artifact4
+          path: |
+            hello/*.txt
+            !hello/*[1-9]*.txt
+      # Node.js script to upload artifacts
+      - name: Install package
+        run: npm install @actions/artifact
+      - name: upload artifacts with node.js
+        id: upload-js-artifacts
+        uses: actions/github-script@main
+        with:
+          script: |
+            const {DefaultArtifactClient} = require('@actions/artifact')
+            const artifact = new DefaultArtifactClient()
+            const {id, size} = await artifact.uploadArtifact(
+              // name of the artifact
+              'js-artifact',
+              // files to include (supports absolute and relative paths)
+              ['world.txt', 'hello'],
+              { // optional
+                retentionDays: 10
+              }
+            )
+            console.log(`Created artifact with id: ${id} (bytes: ${size}`)
+
+            const {downloadPath} = await artifact.downloadArtifact(id, {
+              // optional: download destination path. otherwise defaults to $GITHUB_WORKSPACE
+              path: '/tmp/dst/path',
+            })
+            console.log(`Downloaded artifact ${id} to: ${downloadPath}`)
+
+            return id
+  
+  download-artifacts:
+    runs-on: ubuntu-latest
+    needs: upload-artifacts
+    steps:
+      # Actions to download artifacts
+      - name: download file
+        uses: actions/download-artifact@main
+        with:
+          name: artifact1
+      - name: download directory to custom path
+        uses: actions/download-artifact@main
+        with:
+          name: artifact2
+          path: /tmp2
+      # Node.js script to download artifacts
+      - name: Install package
+        run: npm install @actions/artifact
+      - name: download artifacts with node.js
+        uses: actions/github-script@main
+        with:
+          script: |
+            const {DefaultArtifactClient} = require('@actions/artifact')
+            const artifact = new DefaultArtifactClient()
+            
+            // Use id to download the artifact
+            let id = ${{ needs.upload-artifacts.outputs.js-artifacts-id }}
+            let {downloadPath} = await artifact.downloadArtifact(id, {
+              // optional: download destination path. otherwise defaults to $GITHUB_WORKSPACE
+              path: '/tmp5',
+            })
+            console.log(`Downloaded artifact ${id} to: ${downloadPath}`)
+
+            // Use name to download the artifact
+            let {id, name, size} = await artifact.downloadArtifact('artifact3')
+            console.log(`Find artifact ${name} with id: ${id} (bytes: ${size}`)
+            let {downloadPath} = await artifact.downloadArtifact(id, { path: '/tmp3' })
+            console.log(`Downloaded artifact ${id} to: ${downloadPath}`)
+
+            // delete artifact
+            let {id} = await artifact.deleteArtifact('artifact1')
+            console.log(`Deleted artifact with id: ${id}`)
+
+            // list all artifacts
+            let artifacts = await artifact.listArtifacts()
+            console.log(`List of artifacts: ${artifacts}`)
+
+            // filter artifact4
+            let artifact4 = artifacts.artifacts.filter(artifact => artifact.name === 'artifact4')[0]
+
+            // Use REST Api to download the artifact4
+            await github.request('GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/{archive_format}', {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: id,
+              archive_format: 'zip',
+              headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+              }
+            })
+      - name: list files
+        run: |
+          ls -l -R
