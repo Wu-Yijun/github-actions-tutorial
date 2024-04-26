@@ -115,7 +115,12 @@ jobs:
             // Use name to download the artifact
             var {id, name, size} = await artifact.getArtifact('artifact3')
             console.log(`Find artifact ${name} with id: ${id} (bytes: ${size}`)
-            var {downloadPath} = await github.rest.actions.downloadArtifact(id, { path: '/tmp3' })
+            var {downloadPath} = await github.rest.actions.downloadArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: id,
+              archive_format: 'zip',
+            })
             console.log(`Downloaded artifact ${id} to: ${downloadPath}`)
 
             // delete artifact
