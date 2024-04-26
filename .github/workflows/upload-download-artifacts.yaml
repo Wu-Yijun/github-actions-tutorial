@@ -70,21 +70,20 @@ jobs:
 
             const {downloadPath} = await artifact.downloadArtifact(id, {
               // optional: download destination path. otherwise defaults to $GITHUB_WORKSPACE
-              path: '/tmp/dst/path',
+              path: 'tmp/dst/path',
             })
             console.log(`Downloaded artifact ${id} to: ${downloadPath}`)
 
             return id
+      - name: List files
+        run: |
+          ls -l -R
   
   download-artifacts:
     runs-on: ubuntu-latest
     needs: upload-artifacts
     steps:
       # Actions to download artifacts
-      - name: create tmp directory
-        run: |
-          mkdir tmp2
-          mkdir tmp3
       - name: download file
         uses: actions/download-artifact@main
         with:
@@ -93,7 +92,7 @@ jobs:
         uses: actions/download-artifact@main
         with:
           name: artifact2
-          path: /tmp2
+          path: tmp2
       # Node.js script to download artifacts
       - name: Install package
         run: npm i @actions/artifact
@@ -108,7 +107,7 @@ jobs:
             let id = ${{ needs.upload-artifacts.outputs.js-artifacts-id }}
             let {downloadPath} = await artifact.downloadArtifact(id, {
               // optional: download destination path. otherwise defaults to $GITHUB_WORKSPACE
-              path: '/tmp5',
+              path: 'tmp5',
             })
             console.log(`Downloaded artifact ${id} to: ${downloadPath}`)
 
